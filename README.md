@@ -1,13 +1,7 @@
 # Overture Data Workshop
 
-Querying the Planet: Leveraging GeoParquet to work with global scale open geospatial data locally and in the cloud
-===
 
-> Consisting of open data from OpenStreetMap, Meta, Esri, Microsoft, Google, and more, Overture Maps data is conflated and converted to a consistent schema before being distributed as geoparquet files in the cloud. This workshop will explore the advantages of GeoParquet and cloud-native geospatial technologies for researchers working with the data both locally and in the cloud.
-
-### Resources
-
-#### Live Q&A: [https://app.sli.do/event/a3aCipNwUzsQyxAxYGjczD](https://app.sli.do/event/a3aCipNwUzsQyxAxYGjczD)
+## Resources
 
 | Name | Description |
 | ---- | ----------- |
@@ -16,40 +10,51 @@ Querying the Planet: Leveraging GeoParquet to work with global scale open geospa
 | [Fused.io](//fused.io) | A new cloud-based analytics platform with User Defined Functions
 | [DuckDB](https://duckdb.org/) | An fast in-process database system for analytics and data manipulation |
 
-# Workshop Agenda
+## Contents
+
+- [Overture Data Workshop](#overture-data-workshop)
+  - [Resources](#resources)
+  - [Contents](#contents)
 - [1. What is Overture Maps?](#1-what-is-overture-maps)
-    - [Explore Overture Data](#explore-overture-data)
-- [2. Fused.io](#2-fusedio)
-    - [1. Getting started with Fused: The Overture Maps Example UDF](#1-getting-started-with-fused-the-overture-maps-example-udf)
-    - [2. _Fusing_ Datasets with Overture in the browser](#2-fusing-datasets-with-overture-in-the-browser)
+- [2. Accessing Overture Maps Data](#2-accessing-overture-maps-data)
+  - [1. The Overture Maps Explore Page](#1-the-overture-maps-explore-page)
+  - [2. Visualizing Overture Data with Fused.io](#2-visualizing-overture-data-with-fusedio)
+  - [3. Download Overture Data with the Official OvertureMaps-Py Python tool](#3-download-overture-data-with-the-official-overturemaps-py-python-tool)
+- [GeoParquet + DuckDB](#geoparquet--duckdb)
 - [3. DuckDB](#3-duckdb)
-  - [Part I. Places Theme](#part-i-places-theme)
+  - [Places Theme](#places-theme)
     - [Step 1: Query for places in a particular location](#step-1-query-for-places-in-a-particular-location)
+    - [2. _Fusing_ Datasets with Overture in the browser](#2-fusing-datasets-with-overture-in-the-browser)
     - [Step 2: Use DuckDB `spatial` extension to convert to common spatial data formats](#step-2-use-duckdb-spatial-extension-to-convert-to-common-spatial-data-formats)
   - [Part II: Buildings Theme](#part-ii-buildings-theme)
   - [Part III: Transportation Theme](#part-iii-transportation-theme)
   - [Part IV: Base Theme](#part-iv-base-theme)
 - [4. Bring the Analysis to the Data in the cloud with Fused](#4-bring-the-analysis-to-the-data-in-the-cloud-with-fused)
-  - [Overture & Oakridge Comparision](#overture--oakridge-comparision)
+  - [Overture \& Oakridge Comparision](#overture--oakridge-comparision)
   - [H3 Aggregated Skyline](#h3-aggregated-skyline)
 
 
-<br /><br /><br /><br /><br /><br />
+---
 
 # 1. What is Overture Maps?
 
-[Back to Agenda](#workshop-agenda)
+| [Table of Contents](#contents) | [Resources](#resources) |
 
-![image](https://github.com/user-attachments/assets/9100d3ee-beb9-479c-a257-ef87502cbe1e)
+![Overture Maps Homepage](img/homepage.png)
 
 The [Overture Maps Foundation](//overturemaps.org) is an open data project within the Linux Foundation that aims to "Power current and next-generation map products by creating reliable, easy-to-use, and interoperable open map data."
 
 Primarily, "Overture is for developers who build map services or use geospatial data." Additionally, Overture is a fantastic resource for researchers looking to work with one of the most complete and computationally efficient open geospatial datasets.
 
-![image](https://github.com/user-attachments/assets/c80345b7-e0d8-471d-9f03-af6979ef9645)
+![Overture Maps Goals](img/overture-goals.png)
 
 
-### Explore Overture Data
+# 2. Accessing Overture Maps Data
+
+| [Table of Contents](#contents) | [Resources](#resources) |
+
+## 1. The Overture Maps Explore Page
+The quickest way to get started with Overture data is to visit the Overture Explore Page:
 
 1. Visit [explore.overturemaps.org](//explore.overturemaps.org) and poke around. This site offers an "x-ray" view of Overture data.
 2. Overture has **6** data themes:
@@ -62,94 +67,79 @@ Primarily, "Overture is for developers who build map services or use geospatial 
 
    The explore page lets you inspect the properties of each feature and links out to the overture schema: [docs.overturemaps.org/schema](//docs.overturemaps.org/schema) where you can learn more about the attributes available for each theme.
 
+3. You can use the "Download Visible" button to download the features in the viewport.
+
+    > [!WARNING] Ensure that only the themes you want to download are selected in the layers panel.
+
 The explore page helps us get an overview of what's in Overture by rendering pre-processed PMTiles archives on a web map. Next, we'll look at the different ways we can interact with Overture data in the raw, Geoparquet format.
 
 
-<br /><br /><br /><br /><br /><br />
+## 2. Visualizing Overture Data with Fused.io
 
-# 2. Fused.io
+Fused is a new analytical platform with powerful capabilities to read and visualize geoparquet right in your browser. The Fused workbench allows you to run any number of public _[User Defined Functions](https://docs.fused.io/core-concepts/write/) (UDFs)_.
 
-[Back to Agenda](#workshop-agenda)
-
-![image](https://github.com/user-attachments/assets/ff9f8a75-7b9d-4039-89d6-0001ac8c952c)
-
-Fused is a new analytical platform with powerful capabilities to read and visualize geoparquet right in your browser. The Fused workbench allows you to run any number of public [User Defined Functions](https://docs.fused.io/core-concepts/write/), or UDFs.
-
-### 1. Getting started with Fused: [The Overture Maps Example UDF](https://www.fused.io/workbench/catalog/Overture_Maps_Example-64071fb8-2c96-4015-adb9-596c3bac6787)
-
-![image](https://github.com/user-attachments/assets/2978542d-186a-4950-b09e-75f1b131b7a5)
+![image](img/fused-overture-udf.png)
 
 1. In a new browser window, navigate to: [Overture Maps Example](https://www.fused.io/workbench/catalog/Overture_Maps_Example-64071fb8-2c96-4015-adb9-596c3bac6787).
-2. Click "Add to UDF Builder".
-3. On the far left, adjust the parameters to view different types of data from Overture.
-4. Hover over features on the map to see the complete, raw, Overture data.
-5. Zoom all the way out to see the spatial partitioning:
+2. Click "Add to UDF Builder" in the upper right.
+3. In the left-hand panel, you can adjust the **Parameters** to view different Overture data types.
+4. Hover over features on the map to see the complete, raw, Overture data. Fused is actually fetching the complete Overture feature and adding it to the map in your browser, not a pre-computed or tiled version of it.
+5. If you zoom all the way out, you can see the spatial partitioning of the data. This is a helpful analytical view in itself, showing Overture data density.
 
-    ![image](https://github.com/user-attachments/assets/6baf7efd-cad8-4881-ae9a-6fe4c91699fe)
+    ![image](img/fused-overture-udf-rowgroups.png)
 
-
-### 2. _Fusing_ Datasets with Overture in the browser
-
-Now that we've seen what's in Overture data, can we combine (or _fuse_) our Overture data with another dataset?
-
-1. Add the [Overture Nsi](https://www.fused.io/workbench/catalog/Overture_Nsi-dd89972c-ce30-4544-ba0f-81fc09f5bbef) UDF to your fused workbench.
-2. Notice the `join with NSI` parameter in this UDF. Toggle this parameter and have a look around the map at a few different places. For example, here are buildings in Fargo, North Dakota:
-
-<div style="display:block;">
-<img style="width:45%; display:inline-block;"
-    src="https://github.com/user-attachments/assets/4350628c-5e36-4bab-9938-d1968757d6df" />
-<img style="width:45%; display:inline-block;"
-    src="https://github.com/user-attachments/assets/86ed00d9-39dd-4869-ab2e-56dca5e7359b">
-</div>
-
-After getting buildings from Overture, this UDF queries the National Structures Inventory for information about the various buildings. The NSI returns point geometries, which are joined to our Overture buildings with a spatial join in GeoPandas:
-
-```python
-join = gdf_overture.sjoin(gdf, how='left')
-```
-
-Next, if Overture does not have height information for a given building, we calculate a height based on the number of stories from the NSI.
-
-```python
-join["metric"] = join.apply(lambda row: row.height if pd.notnull(row.height) else row.num_story*3, axis=1)
-````
-
-Next, we'll turn to our local machines and look at ways to interact with Overture data from our local environment.
+    _This particular view of Overture data has been re-partitioned by Fused and is hosted on [source.coop](//source.coop)_
 
 
-<br /><br /><br /><br /><br /><br />
+## 3. Download Overture Data with the Official OvertureMaps-Py Python tool
+
+[OvertureMaps-Py](//github.com/overturemaps/overturemaps-py) is the official command-line tool of the Overture Maps Foundation.
+
+1. The easiest way to install the tool is via PyPi using Pip:
+
+    ```pip install overturemaps```
+
+2. Once installed, you can simply run the tool with any bounding box:
+
+    ```
+    overturemaps download --type=building \
+        --bbox=-79.9390,32.7725,-79.9212,32.7813 \
+        -f geojson \
+        -o overture_buildings.geojson
+    ```
+
+> [!IMPORTANT] Now that we've seen what's in the data, let's talk about GeoParquet.
+
+# GeoParquet + DuckDB
+
+| [Table of Contents](#contents) | [Resources](#resources) |
+
+Officially, Overture Maps Data is released as GeoParquet on both AWS and Azure. See the [Getting Overture Data](https://docs.overturemaps.org/getting-data/) section of our documentation for more information.
+
+As a cloud-native geospatial format, GeoParquet allows us to poke and prod at the data in the cloud without having to first download _all_ of Overture.
+
+We'll use DuckDB for the next part.
 
 # 3. DuckDB
+You can [install the latest version of DuckDB](https://duckdb.org/docs/installation/?version=stable&environment=cli&platform=macos&download_method=package_manager) on your machine, or use [MotherDuck](//motherduck.com) to run queries direclty in the browser.
 
-[Back to Agenda](#workshop-agenda)
-
-Since the data is hosted in the cloud as GeoParquet files, we can access it via DuckDB, which can take advantage of this cloud-native format.
-
-First, [Install DuckDB](https://duckdb.org/docs/installation/?version=stable&environment=cli&platform=macos&download_method=package_manager) version >= 1.1.1
-
-Next, you'll need a A GIS environment of your choice. Both QGIS and Esri ArcMap or similar should work. To load geoparquet directly into QGIS, you will need a [version of QGIS with the latest GDAL](https://docs.overturemaps.org/examples/QGIS/). Alternatively, most of this workshop can be visualized with [kepler.gl](kepler.gl)
-
-_If you do not want to install DuckDB locally, you can sign up for MotherDuck, a cloud-based DuckDB, however, you will not be able to use the `COPY TO` commands nor the `h3` extension._
-
-## Part I. Places Theme
+## Places Theme
 
 _**Tip**: When launching DuckDB, specify a persistent DB, such as `duckdb my_db.duckdb`. This way if you create tables, you can access them later._
 
 ### Step 1: Query for places in a particular location
 
 1. Obtain a bounding box of interest (<https://boundingbox.klokantech.com>) is a great tool for creating a bounding box. Specifically, it lets you copy the coordinates in the following format (DublinCore) which is very human-readable.
-Here is a bounding box for Belém:
+Here's a bounding box around us:
 
     ```python
-    westlimit=-48.510183; 
-    southlimit=-1.481205; 
-    eastlimit=-48.387434; 
-    northlimit=-1.385577
+    westlimit=-79.941;
+    southlimit=32.773;
+    eastlimit=-79.924;
+    northlimit=32.781;
     ```
 
-    (I recommend a smaller bounding box, like just a small city or neighborhood for now so you're not working with a lot of data in the example).
-
-2. A basic places query looks like this:
+1. A basic places query looks like this:
 
     ```sql
     SELECT
@@ -157,16 +147,14 @@ Here is a bounding box for Belém:
         names.primary as name,
         confidence,
         geometry
-    FROM read_parquet('s3://overturemaps-us-west-2/release/2024-10-23.0/theme=places/type=place/*', filename=true, hive_partitioning=1)
+    FROM read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=places/type=place/*')
     WHERE
-        bbox.xmin BETWEEN X_WEST AND X_EAST
-        AND bbox.ymin BETWEEN Y_SOUTH AND Y_NORTH
+        bbox.xmin BETWEEN -79.941 AND -79.924
+        AND bbox.ymin BETWEEN 32.773 AND 32.781
     LIMIT 10;
     ```
 
-3. Update the query with the proper values in the `WHERE` clause for `X` and `Y` from your bounding box. Remember, east/west = longitude = X and north/south = latitude = Y.
-
-4. Paste your query into DuckDB and run it.
+2. Paste your query into DuckDB and run it.
 
     You should see something similar to this:
 
@@ -191,6 +179,42 @@ Here is a bounding box for Belém:
     Notice the type of the geometry column is `geometry`. DuckDB recognizes the geo metadata in the source parquet files and automatically converts the column to a geometry type.
 
 3. Consult the [places schema](https://docs.overturemaps.org/schema/reference/places/place/) to learn more about which columns can be accessed and their data types.
+
+
+
+
+
+
+
+
+
+### 2. _Fusing_ Datasets with Overture in the browser
+
+Now that we've seen what's in Overture data, can we combine (or _fuse_) our Overture data with another dataset?
+
+1. Add the [Overture Nsi](https://www.fused.io/workbench/catalog/Overture_Nsi-dd89972c-ce30-4544-ba0f-81fc09f5bbef) UDF to your fused workbench.
+2. Notice the `join with NSI` parameter in this UDF. Toggle this parameter and have a look around the map at a few different places. For example, here are buildings in Fargo, North Dakota:
+
+![Overture Fused NSI](img/fused-overture-nsi.png)
+
+After getting buildings from Overture, this UDF queries the National Structures Inventory for information about the various buildings. The NSI returns point geometries, which are joined to our Overture buildings with a spatial join in GeoPandas:
+
+```python
+join = gdf_overture.sjoin(gdf, how='left')
+```
+
+Next, if Overture does not have height information for a given building, we calculate a height based on the number of stories from the NSI.
+
+```python
+join["metric"] = join.apply(lambda row: row.height if pd.notnull(row.height) else row.num_story*3, axis=1)
+````
+
+Next, we'll turn to our local machines and look at ways to interact with Overture data from our local environment.
+
+
+<br /><br /><br /><br /><br /><br />
+
+
 
 ### Step 2: Use DuckDB `spatial` extension to convert to common spatial data formats
 
