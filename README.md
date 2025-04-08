@@ -6,7 +6,7 @@
 | ---- | ----------- |
 | [Overture Explore Page](//explore.overturemaps.org) | Easiest place to get an overview of Overture data in an X-Ray map view  |
 | [Overture Documentation](//docs.overturemaps.org/) | Schema definition and examples of how to access and work with Overture data  |
-| [DuckDB](https://duckdb.org/) | An fast in-process database system for analytics and data manipulation |
+| [DuckDB](https://duckdb.org/) | A fast in-process database system for analytics and data manipulation |
 | [Fused.io](//fused.io) | A cloud-based analytics platform with User Defined Functions and embedded map visualization tools. |
 
 ## Contents
@@ -23,6 +23,9 @@
 - [3. GeoParquet + DuckDB](#3-geoparquet--duckdb)
   - [1. Querying the Places Theme](#1-querying-the-places-theme)
   - [2. Addresses and Transportation Example](#2-addresses-and-transportation-example)
+- [4. The Global Entity Reference System (GERS)](#4-the-global-entity-reference-system-gers)
+  - [1. Joining places data to buildings](#1-joining-places-data-to-buildings)
+  - [2. Exploring Overture's Divisions \& Hierarchies with GERS](#2-exploring-overtures-divisions--hierarchies-with-gers)
 
 ---
 
@@ -98,7 +101,7 @@ I highly recommend chatting with the Wherobots folks to see Overture data in act
 
 ## 4. Visualizing Overture Data with Fused.io
 
-Fused is an analytical platform with powerful capabilities to read and visualize geoparquet right in your browser. The Fused workbench allows you to run any number of public _[User Defined Functions](https://docs.fused.io/core-concepts/write/) (UDFs)_.
+Fused is a analytical platform with powerful capabilities to read and visualize geoparquet right in your browser. The Fused workbench allows you to run any number of public _[User Defined Functions](https://docs.fused.io/core-concepts/write/) (UDFs)_.
 
 Fused ingests and repartitions Overture data while adding specific metadata optimization. The resulting files are hosted on source.coop:
 
@@ -126,7 +129,7 @@ https://data.source.coop/fused/overture/2025-03-19-1/
 
 # 3. GeoParquet + DuckDB
 
-| [<< Previous](#2-accessing-overture-maps-data) | [Table of Contents](#contents) | [Resources](#resources) | [Next >>](#4-bring-the-analysis-to-the-data-in-the-cloud-with-fused) |
+| [<< Previous](#2-accessing-overture-maps-data) | [Table of Contents](#contents) | [Resources](#resources) | [Next >>](#4-the-global-entity-reference-system-gers) |
 
 As a cloud-native geospatial format, GeoParquet allows us to poke and prod at the data in the cloud without having to first download _all_ of Overture.
 
@@ -263,7 +266,7 @@ Notice the type of the geometry column is `geometry`. This is DuckDB recognizing
 
 1. Overture Addresses
 
-> [!WARNING] This is a much larger themem, so the query requires significantly more bandwidth. The results should be the same as what's visualized on the documentation page: <https://docs.overturemaps.org/guides/addresses/>
+    > [!WARNING] This is a much larger theme, so the query requires significantly more bandwidth. The results should be the same as what's visualized on the documentation page: <https://docs.overturemaps.org/guides/addresses/>
 
     ```sql
     COPY(
@@ -291,3 +294,109 @@ Notice the type of the geometry column is `geometry`. This is DuckDB recognizing
     ```
 
 The takeaway here is that we can get a pretty good idea of what Overture data looks like without having to download it all first.
+
+# 4. The Global Entity Reference System (GERS)
+
+| [<< Previous](#3-geoparquet--duckdb) | [Table of Contents](#contents) | [Resources](#resources) | >> |
+
+
+An Overture ID is a 128-bit unique identifier that, if part of the Global Entity Reference System, will exist in the GERS Registry (coming soon).
+
+Overture is committed to keeping GERS IDs stable across releases and data updates.
+
+Associating third-party data with GERS can be as simple as a spatial join between the two datasets.
+
+## 1. Joining places data to buildings
+
+1. Using nearly the same query as before, we can use DuckDB to perform a spatial join between Overture buildings and places to get a list of places and their IDs that are contained by the building.
+
+    ```sql
+    COPY(
+        SELECT
+            buildings.id AS building_id,
+            buildings.names.primary as building_name,
+            buildings.geometry AS geometry,
+            JSON(ARRAY_AGG(
+                CAST(
+                    ROW(places.id, places.names.primary) AS
+                    ROW(id varchar, name varchar)
+                )
+            )) AS contains_places,
+            COUNT(places.id) AS place_count
+        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=places/type=place/*') places JOIN read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=buildings/type=building/*') buildings
+        ON ST_Intersects_Extent(
+            buildings.geometry,
+            places.geometry
+        )
+        WHERE
+            places.bbox.xmin BETWEEN -79.941 AND -79.924
+            AND places.bbox.ymin BETWEEN 32.773 AND 32.781
+            AND buildings.bbox.xmin > -79.941
+            AND buildings.bbox.xmax < -79.924
+            AND buildings.bbox.ymin > 32.773
+            AND buildings.bbox.ymax < 32.781
+        GROUP BY 1,2,3
+    ) TO 'buildings_with_places.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
+    ```
+
+2. Load the resulting GeoJSON file, `buildings_with_places.geojson` into KeplerGL to see which Overture buildings contain an Overture places record:
+![Buildlings with Places](img/buildings-with-places.jpg)
+
+## 2. Exploring Overture's Divisions & Hierarchies with GERS
+
+Overture's _Divisions_ theme contains administrative boundaries and points for global administrative areas.
+
+1. In this example, we'll use DuckDB to connect to Azure and read the parquet files from Azure blob storage. These are mirrors of the same files we were previously querying on Amazon S3.
+
+    ```sql
+    INSTALL azure;
+    LOAD azure;
+    SET azure_storage_connection_string = 'DefaultEndpointsProtocol=https;AccountName=overturemapswestus2;AccountKey=;EndpointSuffix=core.windows.net';
+
+    CREATE TABLE charleston AS (
+        SELECT
+            *
+        FROM
+            read_parquet('azure://release/2025-03-19.1/theme=divisions/type=division/*')
+        WHERE
+            -- ID for Charleston, South Carolina
+            id = '085052213fffffff014a308a7966bf2a'
+    );
+    ```
+
+2. If we query that table, we can see the Divisions hierarchy: Charleston is in Charleston County, which is in South Carolina, which is in the United States.
+
+    ```sql
+    SELECT
+        h.name,
+        h.subtype,
+        h.division_id
+    FROM
+        charleston
+    CROSS JOIN UNNEST(hierarchies[1]) AS t(h);
+    ```
+
+3. If we wanted to retrieve the actual polygons for these divisions, we can search the `division_area` type of the divisions theme:
+
+    ```sql
+    COPY(
+        SELECT
+            names.primary AS name,
+            subtype,
+            id,
+            geometry
+        FROM
+            read_parquet('azure://release/2025-03-19.1/theme=divisions/type=division_area/*') areas
+        WHERE
+            division_id IN (
+                SELECT
+                    h.division_id
+                FROM
+                    charleston
+                CROSS JOIN UNNEST(hierarchies[1]) AS t(h)
+            )
+    ) TO 'charleston_hierarchies.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
+    ```
+
+4. Load `charleston_hierarchies.geojson` into KeplerGL and you can see the complete hierarchy:
+    ![Charleston Hierarchies](img/charleston_hierarchies.jpg)
