@@ -28,7 +28,7 @@
 
 # 1. What is Overture Maps?
 
-| << | [Table of Contents](#contents) | [Resources](#resources) | [>>](#2-accessing-overture-maps-data) |
+| << | [Table of Contents](#contents) | [Resources](#resources) | [Next >>](#2-accessing-overture-maps-data) |
 
 ![Overture Maps Homepage](img/homepage.png)
 
@@ -59,7 +59,7 @@ You can dive directly into Overture data with the Overture Maps Explore Tool.
 
 3. You can use the "Download Visible" button to download the features in the viewport as 1 GeoJSON file per theme-type.
 
-    > [!WARNING] Ensure that only the themes you want to download are selected in the layers panel.
+> [!WARNING] Ensure that only the themes you want to download are selected in the layers panel.
 
 The explore page helps us get an overview of what's in Overture by rendering pre-processed PMTiles archives on a web map. Next, we'll look at the different ways we can interact with Overture data in the raw, Geoparquet format.
 
@@ -262,7 +262,8 @@ Notice the type of the geometry column is `geometry`. This is DuckDB recognizing
 ## 2. Addresses and Transportation Example
 
 1. Overture Addresses
-    > [!WARNING] This is a much larger themem, so the query requires significantly more bandwidth. The results should be the same as what's visualized on the documentation page: <https://docs.overturemaps.org/guides/addresses/>
+
+> [!WARNING] This is a much larger themem, so the query requires significantly more bandwidth. The results should be the same as what's visualized on the documentation page: <https://docs.overturemaps.org/guides/addresses/>
 
     ```sql
     COPY(
@@ -274,7 +275,7 @@ Notice the type of the geometry column is `geometry`. This is DuckDB recognizing
     ) TO 'global_overture_address_density.csv';
     ```
 
-2. Or we can use _connectors_ as a proxy for where road complexity:
+2. Or we can use _connectors_ as a proxy for road complexity in the transportation theme:
 
     ```sql
     COPY(
