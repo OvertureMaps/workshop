@@ -396,7 +396,7 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
     );
     ```
 
-2. If we query that table, we can see the Divisions hierarchy: Charleston is in Charleston County, which is in South Carolina, within the United States.
+2. If we query that table, we can see the Divisions hierarchy: Charleston is a locality in Charleston County, which is in the region of South Carolina, within the country of the United States.
 
     ```sql
     SELECT
@@ -471,11 +471,13 @@ This data is sourced primarily from OpenStreetMap and Overture performs basic cl
     ```sql
     COPY(
         SELECT
-            h3_latlng_to_cell_string(bbox.ymin, bbox.xmin, 5) as h3,
+            h3_latlng_to_cell_string(bbox.ymin, bbox.xmin, 7) as h3,
             max(elevation) as _max,
             min(elevation) as _min,
             avg(elevation) as _avg
         FROM na_peaks
         GROUP BY 1
-    ) TO 'na_dem_h3.csv';
+    ) TO 'na_dem_h3_hi.csv';
     ```
+
+    ![North America Low resolution DEM](img/na_dem_lo.jpg)
