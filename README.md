@@ -449,6 +449,7 @@ This data is sourced primarily from OpenStreetMap and Overture performs basic cl
 1. The following query extracts all of the peaks with names and elevations from OpenStreetMap.
 
     ```sql
+    LOAD spatial;
     CREATE TABLE na_peaks AS (
         SELECT
             names.primary as name,
@@ -464,6 +465,18 @@ This data is sourced primarily from OpenStreetMap and Overture performs basic cl
             AND bbox.xmin BETWEEN -175 AND -48
             AND bbox.ymin BETWEEN 10 AND 85
     );
+    ```
+
+    Write this out to a GeoJSON file:
+
+    ```sql
+    COPY(
+        SELECT
+            name,
+            elevation,
+            geometry
+        FROM na_peaks
+    ) TO 'na_peaks.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
     ```
 
 2. We can build an h3-gridded DEM for the World from this table:
