@@ -123,7 +123,7 @@ For example, Wherobots makes Overture data available in their spatial data catal
 
 The latest data catalog entry is `wherobots_open_data.overture_2025_03_19_1`.
 
-You can access all of Overture's buildings in Sedona with the following query on Wherobot cloud:
+You can access all of Overture's buildings in Sedona with the following query with Wherobots:
 
 ```python
 buildings = sedona.sql("SELECT * FROM wherobots_open_data.overture_2025_03_19_1.buildings_building")

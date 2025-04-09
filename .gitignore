@@ -3,3 +3,4 @@ data/.DS_Store
 *.dbb
 data/mydb.dbb.wal
 data/na_peaks.geojson
+data_backup/*
