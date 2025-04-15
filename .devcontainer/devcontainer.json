@@ -1,7 +1,11 @@
 {
 	"image": "mcr.microsoft.com/devcontainers/universal:2",
 	"features": {
-		"ghcr.io/eitsupi/devcontainer-features/duckdb-cli:1": {}
+		"ghcr.io/eitsupi/devcontainer-features/duckdb-cli:1": {
+			"version": "latest",
+			"extensions": "spatial",
+			"communityExtensions": "h3"
+		}
 	},
 	"customizations": {
 		"vscode": {
