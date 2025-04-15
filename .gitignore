@@ -4,3 +4,4 @@ data/.DS_Store
 data/mydb.dbb.wal
 data/na_peaks.geojson
 data_backup/*
+notebooks/.ipynb_checkpoints/
