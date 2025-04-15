@@ -1,8 +1,6 @@
 # Global Entity Reference System (GERS)
 
-### Overture Maps Foundation
-
->>>
+<<<
 
 Doctrine?
 
