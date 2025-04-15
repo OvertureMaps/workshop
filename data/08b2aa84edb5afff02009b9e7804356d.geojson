@@ -1,0 +1,93 @@
+{
+  "type": "Feature",
+  "properties": {
+    "id": "08b2aa84edb5afff02009b9e7804356d",
+    "sources": [
+      {
+        "property": "",
+        "dataset": "OpenStreetMap",
+        "record_id": "w67080267@3",
+        "update_time": "2016-11-27T21:24:55.000Z",
+        "confidence": null
+      },
+      {
+        "property": "properties/height",
+        "dataset": "USGS Lidar",
+        "record_id": null,
+        "update_time": null,
+        "confidence": null
+      }
+    ],
+    "version": "0",
+    "level": "",
+    "subtype": "",
+    "class": "",
+    "height": "12.6",
+    "names": "{'primary': People for the Ethical Treatment of Animals, 'common': NULL, 'rules': NULL}",
+    "has_parts": "false",
+    "is_underground": "false",
+    "num_floors": "",
+    "num_floors_underground": "",
+    "min_height": "",
+    "min_floor": "",
+    "facade_color": "",
+    "facade_material": "",
+    "roof_material": "",
+    "roof_shape": "",
+    "roof_direction": "",
+    "roof_orientation": "",
+    "roof_color": "",
+    "roof_height": "",
+    "theme": "buildings",
+    "type": "building"
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          -77.0367978,
+          38.9109429
+        ],
+        [
+          -77.0367976,
+          38.9109627
+        ],
+        [
+          -77.0367829,
+          38.9109626
+        ],
+        [
+          -77.0367827,
+          38.910996
+        ],
+        [
+          -77.0367988,
+          38.9109961
+        ],
+        [
+          -77.0367988,
+          38.9110051
+        ],
+        [
+          -77.0370415,
+          38.9110057
+        ],
+        [
+          -77.0370418,
+          38.9109422
+        ],
+        [
+          -77.0367978,
+          38.9109429
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    -77.03704833984375,
+    38.91094207763672,
+    -77.03678131103516,
+    38.91094207763672
+  ]
+}
