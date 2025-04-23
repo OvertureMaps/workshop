@@ -63,7 +63,7 @@ ID based search: Where the feature can be found both geographically and in the f
 
 ### Data Changelog
 
-ID-based
+ID-based changelog with each data release
 
 <img src="../img/changelog.png" class="r-stretch">
 
