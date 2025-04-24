@@ -10,6 +10,7 @@
 | [Fused.io](//fused.io) | A cloud-based analytics platform with User Defined Functions and embedded map visualization tools. |
 
 ## Contents
+
 - [Overture Data Workshop](#overture-data-workshop)
   - [Resources](#resources)
   - [Contents](#contents)
@@ -21,10 +22,9 @@
     - [4. Visualizing Overture Data with Fused.io](#4-visualizing-overture-data-with-fusedio)
   - [3. GeoParquet + DuckDB](#3-geoparquet--duckdb)
     - [1. Querying the Places Theme](#1-querying-the-places-theme)
-    - [3. Joining places data to buildings](#3-joining-places-data-to-buildings)
+    - [3. Joining places to buildings](#3-joining-places-to-buildings)
   - [5. The Base Theme](#5-the-base-theme)
     - [1. Mountain Peaks](#1-mountain-peaks)
-
 
 ---
 
@@ -183,7 +183,7 @@ Here's a bounding box around us today:
     ```
 
 1. Be sure to run `INSTALL spatial;` and `LOAD spatial;` before running the query. DuckDB does not automatically load the spatial extension.
-.
+
 1. A basic places query looks like this:
 
     ```sql
@@ -294,7 +294,7 @@ Here's a bounding box around us today:
     ) TO 'global_place_density.csv';
     ```
 
-### 2. Addresses and Transportation Examples
+### 2. Querying the Addresses and Transportation Themes
 
 1. Overture Addresses
 
@@ -436,7 +436,7 @@ COPY(
 ) TO 'new_places_slc.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
 ```
 
-### 3. Joining places data to buildings
+### 3. Joining places to buildings
 
 1. Using nearly the same query as before, we can use DuckDB to perform a spatial join between Overture buildings and places to get a list of places and their IDs that are contained by the building.
 
@@ -475,7 +475,6 @@ COPY(
 ## 5. The Base Theme
 
 | [<< Previous](#4-the-global-entity-reference-system-gers) | [Table of Contents](#contents) | [Resources](#resources) | >> |
-
 
 _Base_ contains other geospatial data that someone building a map service needs for a complete map. Currently, this includes:
 
@@ -536,6 +535,3 @@ This data is sourced primarily from OpenStreetMap and Overture performs basic cl
     ```
 
     ![North America Low resolution DEM](img/na_dem_lo.jpg)
-
-
-[def]: #overture-data-workshop
