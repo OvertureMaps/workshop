@@ -1,9 +1,15 @@
-# Global Entity Reference System (GERS)
+## The GeoSpatial Data Challenge
 
-Doctrine?
-
-<<<
+![GeoSpatialDataChallenge](../img/geospatial-data-challenge.png)
 
 <<<
 
+## Global Entity Reference System (GERS)
+
 <<<
+
+Placeholder
+
+<<<
+
+Placeholder

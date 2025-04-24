@@ -10,7 +10,6 @@
 | [Fused.io](//fused.io) | A cloud-based analytics platform with User Defined Functions and embedded map visualization tools. |
 
 ## Contents
-
 - [Overture Data Workshop](#overture-data-workshop)
   - [Resources](#resources)
   - [Contents](#contents)
@@ -22,18 +21,16 @@
     - [4. Visualizing Overture Data with Fused.io](#4-visualizing-overture-data-with-fusedio)
   - [3. GeoParquet + DuckDB](#3-geoparquet--duckdb)
     - [1. Querying the Places Theme](#1-querying-the-places-theme)
-    - [2. Addresses and Transportation Example](#2-addresses-and-transportation-example)
-  - [4. The Global Entity Reference System (GERS)](#4-the-global-entity-reference-system-gers)
-    - [1. Joining places data to buildings](#1-joining-places-data-to-buildings)
-    - [2. Exploring Overture's Divisions \& Hierarchies with GERS](#2-exploring-overtures-divisions--hierarchies-with-gers)
-  - [5. Base Theme](#5-base-theme)
+    - [3. Joining places data to buildings](#3-joining-places-data-to-buildings)
+  - [5. The Base Theme](#5-the-base-theme)
     - [1. Mountain Peaks](#1-mountain-peaks)
+
 
 ---
 
 ## 1. What is Overture Maps?
 
-| << | [Table of Contents](#contents) | [Resources](#resources) | [Next >>](#2-accessing-overture-maps-data) |
+| << | [Slide](slides/#/0/1) | [Table of Contents](#contents) | [Resources](#resources) | [Next >>](#2-accessing-overture-maps-data) |
 
 ![Overture Maps Homepage](img/homepage.png)
 
@@ -45,7 +42,7 @@ Primarily, "Overture is for developers who build map services or use geospatial 
 
 ## 2. Accessing Overture Maps Data
 
-| [<< Previous](#1-what-is-overture-maps) | [Table of Contents](#contents) | [Resources](#resources) | [Next >>](#3-geoparquet--duckdb) |
+| [<< Previous](#1-what-is-overture-maps) | [Slide](slides/#/2) | [Table of Contents](#contents) | [Resources](#resources) | [Next >>](#3-geoparquet--duckdb) |
 
 ### 1. The Overture Maps Explore Page
 
@@ -133,6 +130,8 @@ Talk to any of the Wherobots folks in the room for more demos using Overture.
 
 ### 4. Visualizing Overture Data with Fused.io
 
+[Slides](slides/#/3)
+
 Fused is a analytical platform with powerful capabilities to read and visualize geoparquet right in your browser. The Fused workbench allows you to run any number of public _[User Defined Functions](https://docs.fused.io/core-concepts/write/) (UDFs)_.
 
 Fused ingests and repartitions Overture data while adding specific metadata for their platform. The resulting files are hosted on source.coop:
@@ -193,7 +192,7 @@ Here's a bounding box around us today:
         names.primary as name,
         confidence,
         geometry
-    FROM read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=places/type=place/*')
+    FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*')
     WHERE
         bbox.xmin BETWEEN -79.941 AND -79.924
         AND bbox.ymin BETWEEN 32.773 AND 32.781
@@ -234,7 +233,7 @@ Here's a bounding box around us today:
     SELECT
         round(confidence, 1) AS confidence,
         count(1)
-    FROM read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=places/type=place/*')
+    FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*')
     WHERE
         bbox.xmin BETWEEN -79.941 AND -79.924
         AND bbox.ymin BETWEEN 32.773 AND 32.781
@@ -252,7 +251,7 @@ Here's a bounding box around us today:
         SELECT
             h3_latlng_to_cell_string(bbox.ymin, bbox.xmin, 11) as h3,
             count(1) AS places
-        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=places/type=place/*')
+        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*')
         WHERE
             bbox.xmin BETWEEN -79.941 AND -79.924
             AND bbox.ymin BETWEEN 32.773 AND 32.781
@@ -272,7 +271,7 @@ Here's a bounding box around us today:
         SELECT
             h3_latlng_to_cell_string(bbox.ymin, bbox.xmin, 8) as h3,
             count(1) AS places
-        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=places/type=place/*')
+        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*')
         WHERE
             bbox.xmin BETWEEN -83.354 AND -78.541
             AND bbox.ymin BETWEEN 32.0335 AND 35.2155
@@ -288,14 +287,14 @@ Here's a bounding box around us today:
         SELECT
             h3_latlng_to_cell_string(bbox.ymin, bbox.xmin, 5) as h3,
             count(1) AS places
-        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=places/type=place/*')
+        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*')
         WHERE
             confidence > 0.7
         GROUP BY 1
     ) TO 'global_place_density.csv';
     ```
 
-### 2. Addresses and Transportation Example
+### 2. Addresses and Transportation Examples
 
 1. Overture Addresses
 
@@ -306,7 +305,7 @@ Here's a bounding box around us today:
         SELECT
             h3_latlng_to_cell_string(bbox.ymin, bbox.xmin, 5) as h3,
             count(1) AS addresses
-        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=addresses/type=address/*')
+        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=addresses/type=address/*')
         GROUP BY 1
     ) TO 'global_overture_address_density.csv';
     ```
@@ -318,7 +317,7 @@ Here's a bounding box around us today:
         SELECT
             h3_latlng_to_cell_string(bbox.ymin, bbox.xmin, 8) as h3,
             count(1) AS road_complexity
-        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=transportation/type=connector/*')
+        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=transportation/type=connector/*')
         WHERE
             bbox.xmin BETWEEN -83.354 AND -78.541
             AND bbox.ymin BETWEEN 32.0335 AND 35.2155
@@ -330,51 +329,15 @@ The takeaway here is that we can get a pretty good idea of what Overture data lo
 
 ## 4. The Global Entity Reference System (GERS)
 
-| [<< Previous](#3-geoparquet--duckdb) | [Table of Contents](#contents) | [Resources](#resources) | >> |
+| [<< Previous](#3-geoparquet--duckdb) | [Table of Contents](#contents) | [Resources](#resources) | [Next >>](#5-the-base-theme) |
 
 An Overture ID is a 128-bit unique identifier that, if part of the Global Entity Reference System, will exist in the GERS Registry (coming soon).
 
-Overture is committed to keeping GERS IDs stable across releases and data updates.
+Overture is committed to keeping GERS IDs stable across releases and data updates. This enables a valuable data changelog between releases.
 
 Associating third-party data with GERS can be as simple as a spatial join between the two datasets.
 
-### 1. Joining places data to buildings
-
-1. Using nearly the same query as before, we can use DuckDB to perform a spatial join between Overture buildings and places to get a list of places and their IDs that are contained by the building.
-
-    ```sql
-    COPY(
-        SELECT
-            buildings.id AS building_id,
-            buildings.names.primary as building_name,
-            buildings.geometry AS geometry,
-            JSON(ARRAY_AGG(
-                CAST(
-                    ROW(places.id, places.names.primary) AS
-                    ROW(id varchar, name varchar)
-                )
-            )) AS contains_places,
-            COUNT(places.id) AS place_count
-        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=places/type=place/*') places JOIN read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=buildings/type=building/*') buildings
-        ON ST_Intersects_Extent(
-            buildings.geometry,
-            places.geometry
-        )
-        WHERE
-            places.bbox.xmin BETWEEN -79.941 AND -79.924
-            AND places.bbox.ymin BETWEEN 32.773 AND 32.781
-            AND buildings.bbox.xmin > -79.941
-            AND buildings.bbox.xmax < -79.924
-            AND buildings.bbox.ymin > 32.773
-            AND buildings.bbox.ymax < 32.781
-        GROUP BY 1,2,3
-    ) TO 'buildings_with_places.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
-    ```
-
-1. Load the resulting GeoJSON file, `buildings_with_places.geojson` into KeplerGL to see which Overture buildings contain an Overture places record:
-![Buildings with Places](img/buildings-with-places.jpg)
-
-### 2. Exploring Overture's Divisions & Hierarchies with GERS
+### 1. Exploring Overture's Divisions & Hierarchies with GERS
 
 Overture's _Divisions_ theme contains administrative boundaries and points for global administrative areas.
 
@@ -389,7 +352,7 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
         SELECT
             *
         FROM
-            read_parquet('azure://release/2025-03-19.1/theme=divisions/type=division/*')
+            read_parquet('azure://release/2025-04-23.0/theme=divisions/type=division/*')
         WHERE
             -- ID for Charleston, South Carolina
             id = '085052213fffffff014a308a7966bf2a'
@@ -418,7 +381,7 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
             id,
             geometry
         FROM
-            read_parquet('azure://release/2025-03-19.1/theme=divisions/type=division_area/*') areas
+            read_parquet('azure://release/2025-04-23.0/theme=divisions/type=division_area/*') areas
         WHERE
             division_id IN (
                 SELECT
@@ -433,7 +396,86 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
 4. Load `charleston_hierarchies.geojson` into KeplerGL and you can see the complete hierarchy:
     ![Charleston Hierarchies](img/charleston_hierarchies.jpg)
 
-## 5. Base Theme
+### 2. Data Changelog
+
+Every Overture release includes a changelog with a high level overview of data added, removed, or changed, based on the ID.
+
+#### 1. Identify new places in Salt Lake City
+
+1. The changelog is partitioned by `theme`, `type`, and `change_type`. To identify all of the features added in Salt Lake City, we can use the following query:
+
+    ```sql
+    SELECT
+        id
+    FROM
+        read_parquet('s3://overturemaps-us-west-2/changelog/2025-04-23.0/theme=places/*/*/*.parquet')
+    WHERE
+        change_type = 'added'
+        AND bbox.xmin > -112.461 AND bbox.xmax < -111.073
+        AND bbox.ymin > 40.296 AND bbox.ymax < 40.955
+    ```
+
+```sql
+COPY(
+    SELECT
+        places.id as id,
+        names.primary,
+        categories.primary as category,
+        geometry
+    FROM
+        read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*') places
+    JOIN (
+        SELECT
+            id
+        FROM
+            read_parquet('s3://overturemaps-us-west-2/changelog/2025-04-23.0/theme=places/*/*/*.parquet')
+        WHERE change_type = 'added'
+        AND bbox.xmin > -112.461 AND bbox.xmax < -111.073 AND bbox.ymin > 40.296 AND bbox.ymax < 40.955
+        ) changelog
+    ON places.id = changelog.id
+) TO 'new_places_slc.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
+```
+
+### 3. Joining places data to buildings
+
+1. Using nearly the same query as before, we can use DuckDB to perform a spatial join between Overture buildings and places to get a list of places and their IDs that are contained by the building.
+
+    ```sql
+    COPY(
+        SELECT
+            buildings.id AS building_id,
+            buildings.names.primary as building_name,
+            buildings.geometry AS geometry,
+            JSON(ARRAY_AGG(
+                CAST(
+                    ROW(places.id, places.names.primary) AS
+                    ROW(id varchar, name varchar)
+                )
+            )) AS contains_places,
+            COUNT(places.id) AS place_count
+        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*') places JOIN read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=buildings/type=building/*') buildings
+        ON ST_Intersects_Extent(
+            buildings.geometry,
+            places.geometry
+        )
+        WHERE
+            places.bbox.xmin BETWEEN -79.941 AND -79.924
+            AND places.bbox.ymin BETWEEN 32.773 AND 32.781
+            AND buildings.bbox.xmin > -79.941
+            AND buildings.bbox.xmax < -79.924
+            AND buildings.bbox.ymin > 32.773
+            AND buildings.bbox.ymax < 32.781
+        GROUP BY 1,2,3
+    ) TO 'buildings_with_places.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
+    ```
+
+1. Load the resulting GeoJSON file, `buildings_with_places.geojson` into KeplerGL to see which Overture buildings contain an Overture places record:
+![Buildings with Places](img/buildings-with-places.jpg)
+
+## 5. The Base Theme
+
+| [<< Previous](#4-the-global-entity-reference-system-gers) | [Table of Contents](#contents) | [Resources](#resources) | >> |
+
 
 _Base_ contains other geospatial data that someone building a map service needs for a complete map. Currently, this includes:
 
@@ -456,7 +498,7 @@ This data is sourced primarily from OpenStreetMap and Overture performs basic cl
             elevation,
             geometry,
             bbox
-        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-03-19.1/theme=base/type=land/*.parquet')
+        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=base/type=land/*.parquet')
         WHERE
             subtype = 'physical'
             AND class IN ('peak','volcano')
@@ -494,3 +536,6 @@ This data is sourced primarily from OpenStreetMap and Overture performs basic cl
     ```
 
     ![North America Low resolution DEM](img/na_dem_lo.jpg)
+
+
+[def]: #overture-data-workshop
