@@ -1,16 +1,16 @@
-# 2. Accessing Overture Maps Data
+# 2. Exploring & Accessing Overture Maps Data
 
 | [<< 1. What is Overture](1-what-is-overture.md) | [Home](README.md) | [3. GeoParquet & DuckDB >>](3-geoparquet-duckdb.md) |
 
 **Contents**
-- [2. Accessing Overture Maps Data](#2-accessing-overture-maps-data)
-  - [1. The Overture Maps Explore Page](#1-the-overture-maps-explore-page)
+- [2. Exploring \& Accessing Overture Maps Data](#2-exploring--accessing-overture-maps-data)
+  - [1. Overture Maps Explore Page](#1-overture-maps-explore-page)
   - [2. The Official OvertureMaps-Py tool](#2-the-official-overturemaps-py-tool)
   - [3. Where is Overture Data Hosted?](#3-where-is-overture-data-hosted)
   - [4. Visualizing Overture Data with Fused.io](#4-visualizing-overture-data-with-fusedio)
 
 
-## 1. The Overture Maps Explore Page
+## 1. Overture Maps Explore Page
 
 Dive directly into Overture data with the Overture Maps Explore Tool.
 
@@ -30,7 +30,7 @@ Dive directly into Overture data with the Overture Maps Explore Tool.
 
     > [!WARNING] Ensure that only the themes you want to download are selected in the themes panel.
 
-The explore page helps us get an overview of what's in Overture by rendering pre-processed PMTiles archives on a web map. Next, we'll look at the different ways we can interact with Overture data in the  Geoparquet format.
+The explore page helps us get an overview of what's in Overture by rendering pre-processed PMTiles archives on a web map.
 
 ## 2. The Official OvertureMaps-Py tool
 
@@ -92,18 +92,14 @@ You can access all of Overture's buildings in Sedona with the following query wi
 buildings = sedona.sql("SELECT * FROM wherobots_open_data.overture_2025_03_19_1.buildings_building")
 ```
 
-Talk to any of the Wherobots folks in the room for more demos using Overture.
-
 ## 4. Visualizing Overture Data with Fused.io
-
-[Slides](slides/#/3)
 
 Fused is a analytical platform with powerful capabilities to read and visualize geoparquet right in your browser. The Fused workbench allows you to run any number of public _[User Defined Functions](https://docs.fused.io/core-concepts/write/) (UDFs)_.
 
 Fused ingests and repartitions Overture data while adding specific metadata for their platform. The resulting files are hosted on source.coop:
 
 ```bash
-https://data.source.coop/fused/overture/2025-03-19-1/
+https://data.source.coop/fused/overture/<RELEASE>/
 ```
 
 ![image](img/fused-overture-udf.png)

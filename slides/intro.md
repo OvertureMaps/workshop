@@ -2,7 +2,7 @@
 
 [github.com/overturemaps/workshop](//github.com/overturemaps/workshop)
 
-[labs.overturemaps.org/workshop/](//labs.overturemaps.org/workshop/slides/)
+[labs.overturemaps.org/workshop/](//labs.overturemaps.org/workshop/)
 
 <<<
 

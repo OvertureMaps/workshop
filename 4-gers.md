@@ -10,7 +10,9 @@
   - [3. Bridge Files](#3-bridge-files)
 
 
-A GERS ID is a 128-bit unique identifier. Overture is committed to keeping GERS IDs stable across releases and data updates. This enables a valuable data changelog between releases.
+A GERS ID is a 128-bit unique identifier.
+
+For primary data themes such as buildings, divisions, places, and transportation, Overture is committed to keeping these IDs stable across releases and data updates.
 
 Associating third-party data with GERS can be as simple as a spatial join between the two datasets.
 
@@ -36,7 +38,7 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
     );
     ```
 
-2. If we query that table, we can see the Divisions hierarchy: Charleston is a locality in Charleston County, which is in the region of South Carolina, within the country of the United States.
+2. When we query that table, we can see the Divisions hierarchy: Charleston is a locality in Charleston County, which is in the region of South Carolina, within the country of the United States.
 
     ```sql
     SELECT
@@ -48,7 +50,7 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
     CROSS JOIN UNNEST(hierarchies[1]) AS t(h);
     ```
 
-3. If we wanted to retrieve the actual polygons for these divisions, we can search the `division_area` type of the divisions theme:
+3. If we wanted to retrieve the actual polygons for these divisions, we can search the `division_area` type of the divisions theme to obtain these particular division IDs:
 
     ```sql
     COPY(

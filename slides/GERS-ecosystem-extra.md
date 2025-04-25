@@ -1,11 +1,3 @@
-# Global Entity Reference System (GERS)
-
-<<<
-
-Doctrine?
-
->>>
-
 ## Components of the Global Entity Reference _System_
 
 1. **Latest Overture Release**

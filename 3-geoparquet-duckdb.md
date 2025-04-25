@@ -3,6 +3,7 @@
 | [<< 2. Data Access](2-accessing-data.md) | [Home](README.md) | [4. GERS >>](4-gers.md) |
 
 **Contents**
+
 - [3. GeoParquet + DuckDB](#3-geoparquet--duckdb)
     - [1. Querying the Places Theme](#1-querying-the-places-theme)
     - [2. Querying the Addresses and Transportation Themes](#2-querying-the-addresses-and-transportation-themes)
