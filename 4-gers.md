@@ -2,13 +2,14 @@
 
 | [<< 3. GeoParquet & DuckDB](3-geoparquet-duckdb.md) | [Home](README.md) | [5. Base Theme >>](5-base-theme.md) |
 
-**Contents**
 - [4. The Global Entity Reference System (GERS)](#4-the-global-entity-reference-system-gers)
   - [1. Exploring Overture's Divisions and Hierarchies with GERS](#1-exploring-overtures-divisions-and-hierarchies-with-gers)
   - [2. Data Changelog](#2-data-changelog)
     - [1. Identify new places in Salt Lake City](#1-identify-new-places-in-salt-lake-city)
   - [3. Bridge Files](#3-bridge-files)
-
+  - [4. GERS Onboarding Services](#4-gers-onboarding-services)
+    - [1. "Gersifying" buildings in Fused.io](#1-gersifying-buildings-in-fusedio)
+    - [2. Adding GERS IDs to places with Wherobots](#2-adding-gers-ids-to-places-with-wherobots)
 
 A GERS ID is a 128-bit unique identifier.
 
@@ -117,12 +118,15 @@ Every Overture release includes a changelog with a high level overview of data a
             ) changelog
         ON places.id = changelog.id
         ORDER BY places.id ASC
-    ) TO 'new_places_slc.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
+        LIMIT 100
+    ) TO 'results/new_places_slc.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
     ```
 
 ## 3. Bridge Files
 
-Bridge files are a quick way to
+Bridge files are published mappings of ID <--> Source IDs for Overture features with a meaningful record_id in sources.
+
+A feature's `sources` attribute lists the original source of the feature, including an additional  Overture feature contains
 
 1. Lookup the Facebook pages for the new places in Salt Lake City:
 
@@ -131,11 +135,24 @@ Bridge files are a quick way to
         SELECT
             'https://facebook.com/' || cast(bridge.record_id as varchar) AS facebook_page,
             slc_places.*
-        FROM ST_READ('new_places_slc.geojson') slc_places JOIN (
+        FROM ST_READ('results/new_places_slc.geojson') slc_places JOIN (
             SELECT
                 *
             FROM
                 read_parquet('s3://overturemaps-us-west-2/bridgefiles/2025-04-23.0/dataset=meta/theme=places/type=place/*')
         ) bridge ON slc_places.id = bridge.id
-    ) TO 'new_places_slc_with_fb_pages.geojson' WITH (FORMAT GDAL, Driver GeoJSON);
+        LIMIT 100
+    ) TO 'results/new_places_slc_with_fb_pages.geojson' WITH (FORMAT GDAL, Driver GeoJSON);
     ```
+
+## 4. GERS Onboarding Services
+
+Associating third-party data with GERS can be as simple as a spatial join between the two datasets.
+
+### 1. "Gersifying" buildings in Fused.io
+
+(5 min)
+
+### 2. Adding GERS IDs to places with Wherobots
+
+(5 min)
