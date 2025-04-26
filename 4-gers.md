@@ -11,11 +11,9 @@
     - [1. "Gersifying" buildings in Fused.io](#1-gersifying-buildings-in-fusedio)
     - [2. Adding GERS IDs to places with Wherobots](#2-adding-gers-ids-to-places-with-wherobots)
 
-A GERS ID is a 128-bit unique identifier.
+A GERS ID is a 128-bit unique identifier that Overture keeps stable across data releases and updates. For themes like Buildings, Divisions, Places, and Transportation, Overture performs feature-level conflation to preserve ID stability.
 
-For primary data themes such as buildings, divisions, places, and transportation, Overture is committed to keeping these IDs stable across releases and data updates.
-
-Associating third-party data with GERS can be as simple as a spatial join between the two datasets.
+Themes that do not conflate multiple input sources use deterministic hashes to ensure consistent matching from input datasets, such as OpenStreetMap, to an 128-bit ID that is fully compatible with the larger GERS ecosystem.
 
 ## 1. Exploring Overture's Divisions and Hierarchies with GERS
 
@@ -24,15 +22,11 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
 1. In this example, we'll use DuckDB to connect to Azure and read the parquet files from Azure blob storage. These are mirrors of the same files we were previously accessing on Amazon S3.
 
     ```sql
-    INSTALL azure;
-    LOAD azure;
-    SET azure_storage_connection_string = 'DefaultEndpointsProtocol=https;AccountName=overturemapswestus2;AccountKey=;EndpointSuffix=core.windows.net';
-
     CREATE TABLE charleston AS (
         SELECT
             *
         FROM
-            read_parquet('azure://release/2025-04-23.0/theme=divisions/type=division/*')
+            read_parquet('az://overturemapswestus2.blob.core.windows.net/release/2025-04-23.0/theme=divisions/type=division/*')
         WHERE
             -- ID for Charleston, South Carolina
             id = '085052213fffffff014a308a7966bf2a'
@@ -61,7 +55,7 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
             id,
             geometry
         FROM
-            read_parquet('azure://release/2025-04-23.0/theme=divisions/type=division_area/*') areas
+            read_parquet('az://overturemapswestus2.blob.core.windows.net/release/2025-04-23.0/theme=divisions/type=division_area/*') areas
         WHERE
             division_id IN (
                 SELECT
