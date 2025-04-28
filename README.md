@@ -7,7 +7,7 @@
 | [Overture Explore Page](//explore.overturemaps.org) | Easiest place to get an overview of Overture data in an X-Ray map view  |
 | [Overture Documentation](//docs.overturemaps.org/) | Schema definition and examples of how to access and work with Overture data  |
 | [DuckDB](https://duckdb.org/) | A fast in-process database system for analytics and data manipulation |
-| [Fused.io](//fused.io) | A cloud-based analytics platform with User Defined Functions and embedded map visualization tools. |
+| [Fused.io](//fused.io) | A cloud-based analytics platform with User Defined Functions and embedded map visualization. |
 
 ---
 

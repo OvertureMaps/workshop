@@ -3,12 +3,14 @@
 | [<< 1. What is Overture](1-what-is-overture.md) | [Home](README.md) | [3. GeoParquet & DuckDB >>](3-geoparquet-duckdb.md) |
 
 - [2. Exploring \& Accessing Overture Maps Data](#2-exploring--accessing-overture-maps-data)
-  - [1. Overture Maps Explore Page](#1-overture-maps-explore-page)
+  - [1. Overture Maps Explore Page (explore.overturemaps.org)](#1-overture-maps-explore-page-exploreoverturemapsorg)
   - [2. The Official OvertureMaps-Py tool](#2-the-official-overturemaps-py-tool)
   - [3. Where is Overture Data Hosted?](#3-where-is-overture-data-hosted)
   - [4. Visualizing Overture Data with Fused.io](#4-visualizing-overture-data-with-fusedio)
 
-## 1. Overture Maps Explore Page
+## 1. Overture Maps Explore Page ([explore.overturemaps.org](//explore.overturemaps.org))
+
+![Explore Page](img/explore.jpg)
 
 Dive directly into Overture data with the Overture Maps Explore Tool.
 
@@ -28,7 +30,7 @@ Dive directly into Overture data with the Overture Maps Explore Tool.
 
     > [!WARNING] Ensure that only the themes you want to download are selected in the themes panel.
 
-The explore page helps us get an overview of what's in Overture by rendering pre-processed PMTiles archives on a web map.
+The explore page is useful to inspect individual map features and download specific themes in small areas.
 
 ## 2. The Official OvertureMaps-Py tool
 
@@ -74,6 +76,8 @@ The explore page helps us get an overview of what's in Overture by rendering pre
 
 3. For easy visualization, you can drag-n-drop the resulting GeoJSON file into [kepler.gl](//kepler.gl) to see the data on the map.
 
+The [Lonboard example notebook] shows how OvertureMaps-Py can be used as a Python module and seamlessly integrate with powerful visualization tools.
+
 ## 3. Where is Overture Data Hosted?
 
 Officially, Overture Maps Data is published in geoparquet format on both AWS and Azure. See more on the [Getting Overture Data](https://docs.overturemaps.org/getting-data/) section of our documentation.
@@ -83,8 +87,6 @@ Overture data is also repartitioned and republished by a number of other compani
 <TODO: Screenshot of data mirror page>
 
 For example, Wherobots makes Overture data available in their spatial data catalog so that can be easily accessed from the Wherobots cloud with Apache Sedona.
-
-The latest data catalog entry is `wherobots_open_data.overture_2025_03_19_1`.
 
 You can access all of Overture's buildings in Sedona with the following query with Wherobots:
 
@@ -113,10 +115,6 @@ https://data.source.coop/fused/overture/<RELEASE>/
     ![image](img/fused-overture-udf-rowgroups.png)
 
     _This particular view of Overture data has been re-partitioned by Fused and is hosted on [source.coop](//source.coop)_
-
-6. A few things to investigate
-    - How does the density of the data compare between addresses and buildings?
-    - Zoom in on some places and buildings to see all of their metadata.
 
 ---
 [Next: GeoParquet & DuckDB >>](3-geoparquet-duckdb.md)
