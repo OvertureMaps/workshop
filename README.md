@@ -55,7 +55,7 @@ SELECT count(1) from overture.place;
 
 ### 1. Github Codespaces
 
-Create a new codespace from the workshop repository in 3 clicks:
+Create a new codespace from the [workshop repository](https://github.com/OvertureMaps/workshop) in 3 clicks:
 
 ![Codespace](img/codespaces.png)
 
