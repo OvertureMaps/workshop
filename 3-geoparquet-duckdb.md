@@ -16,7 +16,7 @@ _Tip: When launching DuckDB, specify a persistent DB, like this: ```duckdb my_db
 
 1. Obtain a bounding box of interest (<https://boundingbox.klokantech.com>) is a great tool for creating a bounding box. Specifically, it lets you copy the coordinates in the following format (DublinCore) which is very human-readable.
 
-Here's a bounding box for Salt Lake City:
+    Here's a bounding box for Salt Lake City:
 
     ```python
     westlimit=-112.101;

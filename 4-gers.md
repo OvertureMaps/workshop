@@ -22,18 +22,18 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
 1. In this example, we'll use DuckDB to connect to Azure and read the parquet files from Azure blob storage. These are mirrors of the same files we were previously accessing on Amazon S3.
 
     ```sql
-    CREATE TABLE charleston AS (
+    CREATE TABLE slc AS (
         SELECT
             *
         FROM
             read_parquet('az://overturemapswestus2.blob.core.windows.net/release/2025-04-23.0/theme=divisions/type=division/*')
         WHERE
-            -- ID for Charleston, South Carolina
-            id = '085052213fffffff014a308a7966bf2a'
+            -- ID for Salt Lake City, Utah
+            id = '0856ea4bbfffffff01c731f9bbbf7873'
     );
     ```
 
-2. When we query that table, we can see the Divisions hierarchy: Charleston is a locality in Charleston County, which is in the region of South Carolina, within the country of the United States.
+2. When we query that table, we can see the Divisions hierarchy: Salt Lake City is a locality in Salt Lake County, which is in the region of Utah, within the country of the United States.
 
     ```sql
     SELECT
@@ -41,7 +41,7 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
         h.subtype,
         h.division_id
     FROM
-        charleston
+        slc
     CROSS JOIN UNNEST(hierarchies[1]) AS t(h);
     ```
 
@@ -61,14 +61,16 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
                 SELECT
                     h.division_id
                 FROM
-                    charleston
+                    slc
                 CROSS JOIN UNNEST(hierarchies[1]) AS t(h)
             )
-    ) TO 'charleston_hierarchies.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
+    ) TO 'results/slc_hierarchies.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
     ```
 
-4. Load `charleston_hierarchies.geojson` into KeplerGL and you can see the complete hierarchy:
-    ![Charleston Hierarchies](img/charleston_hierarchies.jpg)
+4. Load `slc_hierarchies.geojson` into KeplerGL and you can see the complete hierarchy of divisions:
+    ![Salt lake City Hierarchies](img/slc_hierarchy.jpg)
+
+GERS IDs are intended to be the key to unlock interoperability both inside and outside of Overture data. This example showed how Overture features within the same theme can reference one-another via GERS.
 
 ## 2. Data Changelog
 
@@ -118,9 +120,11 @@ Every Overture release includes a changelog with a high level overview of data a
 
 ## 3. Bridge Files
 
-Bridge files are published mappings of ID <--> Source IDs for Overture features with a meaningful record_id in sources.
+Bridge files are published mappings of ID <--> Source IDs for Overture features that came from an established dataset with a meaningful `record_id`. ML-Derived buildings, for example, do not have stable meaningful input IDs, but place records from Meta have corresponding IDs that reference public Facebook pages.
 
-A feature's `sources` attribute lists the original source of the feature, including an additional  Overture feature contains
+A feature's `sources` attribute lists the original source of the feature and any additional attributes that Overture has added.
+
+We can use the `meta` bridge file for places to easily map the GERS ID back to the source ID.
 
 1. Lookup the Facebook pages for the new places in Salt Lake City:
 
@@ -145,8 +149,12 @@ Associating third-party data with GERS can be as simple as a spatial join betwee
 
 ### 1. "Gersifying" buildings in Fused.io
 
+Fused has prepared a small app to showcase how their platform can be used to perform spatial joins between an input dataset and Overture's building dataset right in your browser:
+
+[Gersifying Buildings with Fused](https://www.fused.io/app/fsh_rHgfrGKrwMePmhQDLuC7g)
+
 (5 min)
 
 ### 2. Adding GERS IDs to places with Wherobots
 
-(5 min)
+(8 min)
