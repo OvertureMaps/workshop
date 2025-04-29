@@ -18,10 +18,132 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.2.1/theme/white.min.css" integrity="sha512-UhEXjYpwYXWrVqfUGcYCXKplXsHlJeKovbJE3T7VkLfJRuVh4IQafsngabSUWzki/YyU3J625ChNjGSi06bqvg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
-    /* Style Overrides */
+    /* Style Overrides - Overture Maps Theme */
+
+    /* Import Noto Sans and Montserrat fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap');
 
     :root{
+      /* Base reveal.js variable overrides */
       --r-heading-text-transform: none;
+
+      /* Overture Maps color scheme - light theme */
+      --om-color-primary: #2c2e7f;
+      --om-color-primary-dark: #3a48b8;
+      --om-color-primary-darker: #3340a3;
+      --om-color-primary-darkest: #2d388f;
+      --om-color-primary-light: #5362d1;
+      --om-color-primary-lighter: #6673d6;
+      --om-color-primary-lightest: #7985db;
+      --om-link-color: #4051cc;
+      --om-link-hover-color: #4051cc;
+
+      /* Typography */
+      --r-main-font: 'Noto Sans', 'Montserrat', 'Segoe UI', Roboto, Ubuntu, Cantarell, sans-serif;
+      --r-heading-font: 'Montserrat', 'Segoe UI', Roboto, Ubuntu, Cantarell, sans-serif;
+      --r-code-font: monospace;
+
+      /* Colors */
+      --r-background-color: #ffffff;
+      --r-main-color: #333333;
+      --r-heading-color: var(--om-color-primary);
+      --r-link-color: var(--om-link-color);
+      --r-link-color-hover: var(--om-link-hover-color);
+      --r-selection-background-color: var(--om-color-primary-lightest);
+    }
+
+    /* Main slide styles */
+    .reveal {
+      font-family: var(--r-main-font);
+      font-size: 36px;
+    }
+
+    .reveal h1,
+    .reveal h2,
+    .reveal h3,
+    .reveal h4,
+    .reveal h5,
+    .reveal h6 {
+      font-family: var(--r-heading-font);
+      font-weight: 600;
+      color: var(--om-color-primary);
+      margin-bottom: 0.5em;
+    }
+
+    .reveal h1 { font-size: 2.2em; }
+    .reveal h2 { font-size: 1.8em; }
+    .reveal h3 { font-size: 1.4em; }
+
+    /* Links */
+    .reveal a {
+      color: var(--om-link-color);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .reveal a:hover {
+      color: var(--om-link-hover-color);
+      text-decoration: underline;
+    }
+
+    /* Code blocks */
+    .reveal pre {
+      background-color: #f5f5f5;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .reveal code {
+      font-size: 0.9em;
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      background-color: rgba(0,0,0,0.05);
+    }
+
+    /* Lists */
+    .reveal ul,
+    .reveal ol {
+      margin-left: 1em;
+    }
+
+    .reveal li {
+      margin-bottom: 0.5em;
+    }
+
+    /* Blockquotes */
+    .reveal blockquote {
+      border-left: 4px solid var(--om-color-primary-light);
+      padding-left: 1em;
+      font-style: italic;
+    }
+
+    /* Tables */
+    .reveal table {
+      border-collapse: collapse;
+      margin: 1em 0;
+    }
+
+    .reveal table th {
+      background-color: var(--om-color-primary);
+      color: white;
+      font-weight: 600;
+      padding: 0.5em 1em;
+    }
+
+    .reveal table td {
+      border: 1px solid #ddd;
+      padding: 0.5em 1em;
+    }
+
+    /* Controls and progress */
+    .reveal .controls {
+      color: var(--om-color-primary);
+    }
+
+    .reveal .progress {
+      background: rgba(0, 0, 0, 0.1);
+      color: var(--om-color-primary);
+      height: 4px;
     }
 
   </style>
@@ -36,7 +158,7 @@
         data-markdown="intro.md"
         data-separator="^>>>"
         data-separator-vertical="^<<<"
-        data-separator-notes="^Note:"
+        data-separator-notes="^Notes:"
         data-charset="iso-8859-15"
       ></section>
 
@@ -45,7 +167,7 @@
         data-markdown="GERS.md"
         data-separator="^>>>"
         data-separator-vertical="^<<<"
-        data-separator-notes="^Note:"
+        data-separator-notes="^Notes:"
         data-charset="iso-8859-15"
       ></section>
 
@@ -54,7 +176,7 @@
         data-markdown="exploring-data.md"
         data-separator="^>>>"
         data-separator-vertical="^<<<"
-        data-separator-notes="^Note:"
+        data-separator-notes="^Notes:"
         data-charset="iso-8859-15"
       ></section>
 
@@ -68,20 +190,20 @@
       ></section> -->
 
       <!-- Workshop Setup -->
-      <section
+      <!-- <section
         data-markdown="setup.md"
         data-separator="^>>>"
         data-separator-vertical="^<<<"
-        data-separator-notes="^Note:"
+        data-separator-notes="^Notes:"
         data-charset="iso-8859-15"
-      ></section>
+      ></section> -->
 
       <!-- GERS Extras -->
       <section
         data-markdown="GERS-ecosystem-extra.md"
         data-separator="^>>>"
         data-separator-vertical="^<<<"
-        data-separator-notes="^Note:"
+        data-separator-notes="^Notes:"
         data-charset="iso-8859-15"
       ></section>
 

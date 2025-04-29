@@ -1,20 +1,37 @@
-## The GeoSpatial Data Challenge
-
-![GeoSpatialDataChallenge](../img/geospatial-data-challenge.png)
-
-<<<
-
-### Data onboarding is a tax on the data ecosystem
-- **Tax on Budgets**: Data onboarding costs more than licensing.
-- **Tax on Market Size**: Data onboarding and geospatial conflation is too hard, limiting the addressable market.
-- **Tax on Intelligence**: Data science and analysis suffer because hypotheses requiring new datasets cannot be quickly tested.
-
->>>
-
 ## Global Entity Reference System (GERS)
 
-Placeholder
+- Universal framework for structuring & matching map data across systems
+- GERS IDs identify real world entities such as road segments
+- Simplifies integrating & exchanging data layers
 
 <<<
 
-Placeholder
+## How does GERS Work?
+
+Overture assigns a unique ID to **discrete map entities**.
+
+These could be buildings, road segments, places, or addresses.
+
+Overture maintains open-source matching and conflation libraries to ensure that the ID remains stable across releases.
+
+<<<
+
+Each Overture release is the latest _reference map_ for features with GERS IDs.
+
+The reference map is _global_, _open_.
+
+<<<
+
+<img src="../img/gers-layers.png" class="r-stretch">
+
+<<<
+
+## Global Entity Reference **System**
+
+GERS is not just a stable ID. The "S" stands for system.
+
+1. The reference map
+2. Global registry of all GERS IDs ever published
+3. Data Changelog based describing changes to entities across releases.
+4. Bridge files for easy mappings of source IDs to GERS IDs.
+5. Onboarding Services that let anyone easily associate their data with GERS.
