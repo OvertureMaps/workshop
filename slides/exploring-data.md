@@ -12,3 +12,7 @@
 <img src="../img/explore.jpg" class="r-stretch">
 
 [explore.overturemaps.org](https://explore.overturemaps.org)
+
+<<<
+
+Continue the Workshop at [labs.overturemaps.org/workshop](//labs.overturemaps.org/workshop)

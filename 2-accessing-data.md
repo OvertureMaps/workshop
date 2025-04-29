@@ -1,8 +1,8 @@
-# 2. Exploring & Accessing Overture Maps Data
+# 2. Exploring and Accessing Overture Maps Data
 
 | [<< 1. What is Overture](1-what-is-overture.md) | [Home](README.md) | [3. GeoParquet & DuckDB >>](3-geoparquet-duckdb.md) |
 
-- [2. Exploring \& Accessing Overture Maps Data](#2-exploring--accessing-overture-maps-data)
+- [2. Exploring and Accessing Overture Maps Data](#2-exploring-and-accessing-overture-maps-data)
   - [1. Overture Maps Explore Page (explore.overturemaps.org)](#1-overture-maps-explore-page-exploreoverturemapsorg)
   - [2. The Official OvertureMaps-Py tool](#2-the-official-overturemaps-py-tool)
   - [3. Where is Overture Data Hosted?](#3-where-is-overture-data-hosted)
