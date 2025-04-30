@@ -14,8 +14,6 @@ These could be buildings, road segments, places, or addresses.
 
 Overture maintains open-source matching and conflation libraries to ensure that the ID remains stable across releases.
 
-<<<
-
 Each Overture release is the latest _reference map_ for features with GERS IDs.
 
 The reference map is _global_, _open_.

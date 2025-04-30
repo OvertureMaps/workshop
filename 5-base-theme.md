@@ -5,7 +5,6 @@
 **Contents**
 - [5. The Base Theme](#5-the-base-theme)
     - [1. Mountain Peaks](#1-mountain-peaks)
-    - [2. Water Features](#2-water-features)
 
 
 _Base_ contains other geospatial data that someone building a map service needs for a complete map. Currently, this includes:
@@ -67,7 +66,3 @@ This data is sourced primarily from OpenStreetMap and Overture performs basic cl
     ```
 
     ![North America Low resolution DEM](img/na_dem_lo.jpg)
-
-### 2. Water Features
-
-A little demo with water features...
