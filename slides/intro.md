@@ -6,6 +6,8 @@
 
 [labs.overturemaps.org/workshop/](//labs.overturemaps.org/workshop/)
 
+<img src="../img/omf_logo.png" class="r-stretch">
+
 <<<
 
 ## What is Overture Maps?
@@ -25,11 +27,10 @@
 ![GeoSpatialDataChallenge](../img/geospatial-data-challenge.png)
 
 Notes:
-What’s the problem?
 Proliferation of sensors combined with connectivity, More geospatial data available than ever
 This comes with higher costs & complexity to integrate
-“Data conflation tax”: Costly (re)matching to integrate new data
-“Spending more on integrating data than on licensing it”. Smaller players are disproportionately burdened
+"Data conflation tax": Costly (re)matching to integrate new data
+"Spending more on integrating data than on licensing it". Smaller players are disproportionately burdened
 When innovation suffers, users suffer
 
 <<<
