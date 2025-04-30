@@ -113,7 +113,7 @@ _Tip: When launching DuckDB, specify a persistent DB, like this: ```duckdb my_db
             count(1) AS places
         FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*')
         WHERE
-            bbox.xmin BETWEEN 114.0529 AND -109.0416
+            bbox.xmin BETWEEN -114.0529 AND -109.0416
             AND bbox.ymin BETWEEN 36.9978 AND 42.0017
             AND confidence > 0.7
         GROUP BY 1
