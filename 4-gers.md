@@ -154,6 +154,8 @@ Fused has prepared a small app to showcase how their platform can be used to per
 
 [Gersifying Buildings with Fused](https://www.fused.io/app/fsh_rHgfrGKrwMePmhQDLuC7g)
 
+![Fused Gersification UDF](img/fused-gersifify.png)
+
 (5 min)
 
 ### 2. Adding GERS IDs to places with Wherobots
