@@ -84,7 +84,7 @@ Officially, Overture Maps Data is published in geoparquet format on both AWS and
 
 Overture data is also repartitioned and republished by a number of other companies and organizations, such as Wherobots, Carto, Esri, and Fused.io.
 
-<TODO: Screenshot of data mirror page>
+![Data Mirrors on Docs](img/data-mirrors.png)
 
 For example, Wherobots makes Overture data available in their spatial data catalog so that can be easily accessed from the Wherobots cloud with Apache Sedona.
 
