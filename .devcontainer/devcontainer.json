@@ -20,5 +20,6 @@
 				"ms-python.debugpy"
 			]
 		}
-	}
+	},
+	"postCreateCommand": "pip install --user -r requirements.txt"	  
 }
