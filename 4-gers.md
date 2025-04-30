@@ -135,7 +135,8 @@ We can use the `meta` bridge file for places to easily map the GERS ID back to t
             slc_places.*
         FROM ST_READ('results/new_places_slc.geojson') slc_places JOIN (
             SELECT
-                *
+                id,
+                record_id
             FROM
                 read_parquet('s3://overturemaps-us-west-2/bridgefiles/2025-04-23.0/dataset=meta/theme=places/type=place/*')
         ) bridge ON slc_places.id = bridge.id

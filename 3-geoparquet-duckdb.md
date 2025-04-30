@@ -131,7 +131,7 @@ _Tip: When launching DuckDB, specify a persistent DB, like this: ```duckdb my_db
         WHERE
             confidence > 0.7
         GROUP BY 1
-    ) TO 'global_place_density.csv';
+    ) TO 'results/global_place_density.csv';
     ```
 
 ## 2. Querying the Addresses and Transportation Themes
@@ -147,7 +147,7 @@ _Tip: When launching DuckDB, specify a persistent DB, like this: ```duckdb my_db
             count(1) AS addresses
         FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=addresses/type=address/*')
         GROUP BY 1
-    ) TO 'global_overture_address_density.csv';
+    ) TO 'results/global_overture_address_density.csv';
     ```
 
 1. Or we can use _connectors_ as a proxy for road complexity in the transportation theme:
@@ -162,7 +162,7 @@ _Tip: When launching DuckDB, specify a persistent DB, like this: ```duckdb my_db
             bbox.xmin BETWEEN -83.354 AND -78.541
             AND bbox.ymin BETWEEN 32.0335 AND 35.2155
         GROUP BY 1
-    ) TO 'south_carolina_transportation_connector_density.csv';
+    ) TO 'results/south_carolina_transportation_connector_density.csv';
     ```
 
 The takeaway here is that we can get a pretty good idea of what Overture data looks like without having to download it all first.
