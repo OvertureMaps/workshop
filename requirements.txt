@@ -2,3 +2,4 @@ lonboard
 overturemaps
 duckdb
 geopandas
+shapely
