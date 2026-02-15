@@ -3,18 +3,30 @@
 | [<< 2. Data Access](2-accessing-data.md) | [Home](README.md) | [4. GERS >>](4-gers.md) |
 
 - [3. GeoParquet + DuckDB](#3-geoparquet--duckdb)
-  - [1. Querying the Places Theme](#1-querying-the-places-theme)
-  - [2. Querying the Addresses and Transportation Themes](#2-querying-the-addresses-and-transportation-themes)
 
 As a cloud-native geospatial format, GeoParquet allows us to access discrete chunks of the data without having to first read or download _all_ of Overture. DuckDB allows us to write SQL queries that can take advantage of the optimizations and efficiencies of the underlying GeoParquet format.
 
-You can either [install the latest version of DuckDB](https://duckdb.org/docs/installation/?version=stable&environment=cli&platform=macos&download_method=package_manager) on your machine, or run these queries directly in a Github codespace. [See the Codespace instructions here](https://labs.overturemaps.org/workshop/#workshop-setup)
+### Setup instructions
 
-## 1. Querying the Places Theme
+First, refer to the [setup instructions here](https://labs.overturemaps.org/workshop/#workshop-setup). 
 
-_Tip: When launching DuckDB, specify a persistent DB, like this: ```duckdb my_db.duckdb```. Now you can create tables and access them later._
+If you're running through these queries locally using DuckDB, be sure to specify a database, such as `duckdb workshop.dbb`, so that you save tables and views that will persist in a future session. Another option is to attach the following database in DuckDB to access the latest Overture data. 
 
-1. Obtain a bounding box of interest (<https://boundingbox.klokantech.com>) is a great tool for creating a bounding box. Specifically, it lets you copy the coordinates in the following format (DublinCore) which is very human-readable.
+```sql
+LOAD spatial;
+ATTACH 'https://labs.overturemaps.org/data/latest.dbb' as overture;
+
+-- Now you can just reference `overture.place` for type=place features
+SELECT count(1) from overture.place;
+```
+
+You can also run these queries in a Github codespace. [See the Codespace instructions here](https://labs.overturemaps.org/workshop/#workshop-setup)
+
+## Querying the Places Theme
+
+**These examples use the latest.dbb example shown above.**
+
+1. Obtain a bounding box of interest (<https://boundingbox.klokantech.com>) is a great tool for creating a bounding box. Specifically, it lets you copy the coordinates in the following format which is very human-readable.
 
     Here's a bounding box for Salt Lake City:
 
@@ -25,9 +37,7 @@ _Tip: When launching DuckDB, specify a persistent DB, like this: ```duckdb my_db
     northlimit=40.853;
     ```
 
-1. Be sure to run `INSTALL spatial;` and `LOAD spatial;` before running the query. DuckDB does not automatically load the spatial extension.
-
-1. A basic places query looks like this:
+2. A basic places query looks like this. *Note: Be sure to run `INSTALL spatial;` and `LOAD spatial;` before running the query. DuckDB does not automatically load the spatial extension.* 
 
     ```sql
     SELECT
@@ -35,47 +45,43 @@ _Tip: When launching DuckDB, specify a persistent DB, like this: ```duckdb my_db
         names.primary as name,
         confidence,
         geometry
-    FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*')
+    FROM overture.place
     WHERE
         bbox.xmin BETWEEN -112.101 AND -111.740
         AND bbox.ymin BETWEEN 40.699 AND 40.853
     LIMIT 10;
     ```
 
-1. When you run that in DuckDB, you should get back something similar to this:
+This gives you 10 places in Salt Lake City. Notice the type of the geometry column is `geometry`. This is DuckDB recognizing the geoparquet metadata and handling the column type properly.
 
-    ```sql
-    ┌──────────────────────────────────┬─────────────────────────────────────────────────┬─────────────────────┬─────────────────────────────────┐
-    │                id                │                      name                       │     confidence      │            geometry             │
-    │             varchar              │                     varchar                     │       double        │            geometry             │
-    ├──────────────────────────────────┼─────────────────────────────────────────────────┼─────────────────────┼─────────────────────────────────┤
-    │ 08f269602b36dd83031c482287a964f3 │ Pleasant Green Park                             │  0.9781719885115729 │ POINT (-112.0945883 40.70094)   │
-    │ 08f269602baec0440318ca7ac620e59a │ Magna Elementary School                         │  0.9781719885115729 │ POINT (-112.0948915 40.7039208) │
-    │ 08f2696076ca0cb103196ea2d3cb51fd │ Magna Recreation Center                         │  0.9781719885115729 │ POINT (-112.0922502 40.700182)  │
-    │ 08f2696076d9cc5203445cb3f7bdb886 │ Magna Outdoor Pool                              │  0.9781719885115729 │ POINT (-112.0933876 40.7013161) │
-    │ 08f269602ba5d8900352bf0296a1383c │ The Church of Jesus Christ of Latter-day Saints │  0.9781719885115729 │ POINT (-112.0923506 40.7043022) │
-    │ 08f2696076d10243038bc08602417577 │ England Enterprises                             │ 0.29137199434229144 │ POINT (-112.09027 40.7030699)   │
-    │ 08f2696076c720da0353d2cd5b65a029 │ The Church of Jesus Christ of Latter-day Saints │  0.9781719885115729 │ POINT (-112.0868382 40.699125)  │
-    │ 08f2696076c723b003fb31827fa27bdb │ Spencer 4th Ward Friends                        │ 0.29137199434229144 │ POINT (-112.08689 40.699292)    │
-    │ 08f2696076c63a49032c62ac46544e39 │ The Flowers of Faith                            │  0.8936305732484077 │ POINT (-112.0845037 40.6993426) │
-    │ 08f2696076d42ccd03af1e08df722d5a │ Arthur Mill                                     │ 0.47268106734434556 │ POINT (-112.0858333 40.7016667) │
-    ├──────────────────────────────────┴─────────────────────────────────────────────────┴─────────────────────┴─────────────────────────────────┤
-    │ 10 rows                                                                                                                          4 columns │
-    └────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+┌──────────────────────────────────────┬──────────────────────────────────┬─────────────────────┬─────────────────────────────────┐
+│                  id                  │               name               │     confidence      │            geometry             │
+│               varchar                │             varchar              │       double        │            geometry             │
+├──────────────────────────────────────┼──────────────────────────────────┼─────────────────────┼─────────────────────────────────┤
+│ 4bd8a53a-8ef2-441c-8023-2b1dbede3f00 │ Eastwood Elementary School       │  0.9500626074407351 │ POINT (-111.7937475 40.6996334) │
+│ 581db44d-5677-451f-bf46-c3c4f8d52087 │ REI                              │                0.77 │ POINT (-111.794148 40.700257)   │
+│ a6dcea2c-c1c8-4e6e-927c-9ee9f4f2c61c │ Savers                           │               0.862 │ POINT (-111.7946003 40.7018864) │
+│ ba66ae03-9cf8-4483-8c05-b1bfe6b36547 │ Savers Community Donation Center │                0.77 │ POINT (-111.7946003 40.7018864) │
+│ a5bbee83-876d-453e-81e1-a79eb5482533 │ Grandeur Peak                    │  0.9500626074407351 │ POINT (-111.7597509 40.7069893) │
+│ 517e8ba3-2b24-426f-af80-f99b4617aaed │ Grandeur Peak Trailhead          │  0.9500626074407351 │ POINT (-111.7958617 40.7075576) │
+│ 81343112-7346-4c11-8007-10c6fd2818f1 │ Parley's Canyon                  │ 0.32347911067676516 │ POINT (-111.780685 40.719567)   │
+│ 6316e033-5826-47c3-ad85-f45059ff53db │ Deer Valley Park City Utah       │  0.6392360292383872 │ POINT (-111.7756324 40.7221476) │
+│ 1dfe1542-bc0f-40a5-974e-b886b6ccd2ef │ Whitney Resevior Utah            │  0.9735918045043945 │ POINT (-111.7750733 40.7227894) │
+│ 56ce9f70-2190-44bc-9e87-91e5c4efbbfa │ Salt Lake County Sheriff's Range │  0.9735918045043945 │ POINT (-111.7554226 40.7350332) │
+├──────────────────────────────────────┴──────────────────────────────────┴─────────────────────┴─────────────────────────────────┤
+│ 10 rows                                                                                                               4 columns │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
-    ```
 
-    Notice the type of the geometry column is `geometry`. This is DuckDB recognizing the geoparquet metadata and handling the column type properly.
-
-1. Consult the [places schema](https://docs.overturemaps.org/schema/reference/places/place/) to learn more about which columns can be accessed and their data types.
-
-1. Notice the `confidence` column. This is a score between 0 and 1 that indicates how likely it is that a place exists. Rather than download all of the data and run statistics, we can let DuckDB do all of the heavy lifting:
+3. Consult the [places schema](https://docs.overturemaps.org/schema/reference/places/place/) to learn more about which columns can be accessed and their data types. Notice the `confidence` column. This is a score between 0 and 1 that indicates how likely it is that a place exists. Rather than download all of the data and run statistics, we can let DuckDB do all of the heavy lifting:
 
     ```sql
     SELECT
         round(confidence, 1) AS confidence,
         count(1)
-    FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*')
+    FROM overture.place
     WHERE
         bbox.xmin BETWEEN -112.101 AND -111.740
         AND bbox.ymin BETWEEN 40.699 AND 40.853
@@ -83,7 +89,7 @@ _Tip: When launching DuckDB, specify a persistent DB, like this: ```duckdb my_db
         ORDER BY confidence DESC;
    ```
 
-1. Going one step further, we can explore the distribution of places with H3 cells, calculated from the bounding box column. The following query uses the `h3_latlng_to_cell_string` function to convert the bounding box to H3 cells, and then counts the number of places in each cell. It writes the results to a CSV file.
+4. Going one step further, we can explore the distribution of places with H3 cells, calculated from the bounding box column. The following query uses the `h3_latlng_to_cell_string` function to convert the bounding box to H3 cells, and then counts the number of places in each cell. It writes the results to a CSV file.
 
     ```sql
     INSTALL h3 from community;
@@ -93,77 +99,68 @@ _Tip: When launching DuckDB, specify a persistent DB, like this: ```duckdb my_db
         SELECT
             h3_latlng_to_cell_string(bbox.ymin, bbox.xmin, 9) as h3,
             count(1) AS places
-        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*')
+        FROM overture.place
         WHERE
             bbox.xmin BETWEEN -112.101 AND -111.740
             AND bbox.ymin BETWEEN 40.699 AND 40.853
             AND confidence > 0.7
         GROUP BY 1
-    ) TO 'results/slc_h3_density.csv';
+    ) TO 'slc_h3_density.csv';
     ```
 
-1. Now drag the resulting CSV file into [kepler.gl](//kepler.gl) to see the results.
+Now drag the resulting CSV file into [kepler.gl](//kepler.gl) to see the results.
 
-1. We can easily scale that query to include all of Utah:
+5. Now let's scale that query using a bounding box that includes all of Utah. You can also remove all of the bounding box contraints to get a global view of places in Overture. 
 
-    ```sql
+```sql
     COPY(
         SELECT
             h3_latlng_to_cell_string(bbox.ymin, bbox.xmin, 8) as h3,
             count(1) AS places
-        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*')
+        FROM overture.place
         WHERE
             bbox.xmin BETWEEN -114.0529 AND -109.0416
             AND bbox.ymin BETWEEN 36.9978 AND 42.0017
             AND confidence > 0.7
         GROUP BY 1
     ) TO 'utah_places_density.csv';
-    ```
+```
 
-1. Going further, just remove all of the bounding box constraints. This will give us a global view of places in Overture. We probably shouldn't all run this at the same time, but you get the idea.
-
-    ```sql
-    COPY(
-        SELECT
-            h3_latlng_to_cell_string(bbox.ymin, bbox.xmin, 5) as h3,
-            count(1) AS places
-        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*')
-        WHERE
-            confidence > 0.7
-        GROUP BY 1
-    ) TO 'results/global_place_density.csv';
-    ```
-
-## 2. Querying the Addresses and Transportation Themes
+## Querying the Addresses and Transportation Themes
 
 1. Overture Addresses
 
-    > [!WARNING] This is a much larger theme, so the query requires significantly more bandwidth. The results should be the same as what's visualized on the documentation page: <https://docs.overturemaps.org/guides/addresses/>
+Let's explore address density in Salt Lake City. You can read more about Overture's Addresses theme [here](https://docs.overturemaps.org/guides/addresses/). 
 
-    ```sql
+```sql
     COPY(
         SELECT
             h3_latlng_to_cell_string(bbox.ymin, bbox.xmin, 5) as h3,
             count(1) AS addresses
-        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=addresses/type=address/*')
+        FROM overture.address
+        WHERE
+            bbox.xmin BETWEEN -112.101 AND -111.740
+            AND bbox.ymin BETWEEN 40.699 AND 40.853
         GROUP BY 1
-    ) TO 'results/global_overture_address_density.csv';
-    ```
+    ) TO 'slc_address_density.csv';
+```
 
-1. Or we can use _connectors_ as a proxy for road complexity in the transportation theme:
+2. Overture Transportation 
 
-    ```sql
+We can use the `connector` type as a proxy for road complexity in the [Overture Transportation](https://docs.overturemaps.org/guides/transportation/) theme.
+
+```sql
     COPY(
         SELECT
             h3_latlng_to_cell_string(bbox.ymin, bbox.xmin, 8) as h3,
             count(1) AS road_complexity
-        FROM read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=transportation/type=connector/*')
+        FROM overture.connector
         WHERE
-            bbox.xmin BETWEEN -83.354 AND -78.541
-            AND bbox.ymin BETWEEN 32.0335 AND 35.2155
+            bbox.xmin BETWEEN -112.101 AND -111.740
+            AND bbox.ymin BETWEEN 40.699 AND 40.853
         GROUP BY 1
-    ) TO 'results/south_carolina_transportation_connector_density.csv';
-    ```
+    ) TO 'slc_transportation_connector_density.csv';
+```
 
 The takeaway here is that we can get a pretty good idea of what Overture data looks like without having to download it all first.
 
