@@ -167,18 +167,12 @@ We can use access the bridge file for Meta places to connect the published GERS 
 
 ## GERS Onboarding Services
 
-Associating third-party data with GERS can be as simple as a spatial join between the two datasets.
+Associating third-party data with GERS usually involves a spatial join between datasets. Many users do this on their own, with their own tools and infrastructure. Overture Maps provides limited hands-on support for GERS-ifying data but several companies within the Overture Maps ecosystem do provide GERS onboarding services. 
 
-1. "Gersifying" buildings in Fused.io
+1. [Fused](https://www.fused.io/)
 
-Fused has prepared a small app to showcase how their platform can be used to perform spatial joins between an input dataset and Overture's building dataset right in your browser:
+2. [Wherobots](https://wherobots.com/)
 
-[Gersifying Buildings with Fused](https://www.fused.io/app/fsh_rHgfrGKrwMePmhQDLuC7g)
+3. [Esri](https://www.esri.com/en-us/home)
 
-![Fused Gersification UDF](img/fused-gersifify.png)
 
-(5 min)
-
-2. Adding GERS IDs to places with Wherobots
-
-(8 min)

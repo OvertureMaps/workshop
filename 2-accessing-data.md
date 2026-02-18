@@ -32,9 +32,9 @@ Dive directly into Overture data with the Overture Maps Explore Tool.
 
 The explore page is useful to inspect individual map features and download specific themes in small areas.
 
-## 2. The Official OvertureMaps-Py tool
+## 2. The Official Overture Maps Python tool
 
-[OvertureMaps-Py](//github.com/overturemaps/overturemaps-py) is the official command-line tool supported by the Overture Maps Foundation.
+[overturemaps-py](//github.com/overturemaps/overturemaps-py) is the official command-line tool supported by the Overture Maps Foundation.
 
 1. The easiest way to install the tool is via PyPi using Pip:
 

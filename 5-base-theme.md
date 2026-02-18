@@ -23,7 +23,7 @@ If you're running through these queries locally using DuckDB, be sure to specify
 
 ```sql
 LOAD spatial;
-ATTACH 'https://labs.overturemaps.org/data/latest.dbb' as overture;
+ATTACH 'https://labs.overturemaps.org/data/latest.ddb' as overture;
 
 -- Now you can just reference `overture.land` for type=land features
 SELECT count(1) from overture.land;
