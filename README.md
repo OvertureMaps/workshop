@@ -1,4 +1,4 @@
-# Overture Data Workshop
+# Overture Maps Workshop
 
 ## Resources
 
@@ -11,7 +11,7 @@
 
 ---
 
-## Workshop Pages
+## Workshop Lessons
 
 [View as Slideshow](slides/)
 
@@ -43,23 +43,13 @@ ATTACH 'https://labs.overturemaps.org/data/latest.dbb' as overture;
 SELECT count(1) from overture.place;
 ```
 
-```sql
-┌─────────────────┐
-│    count(1)     │
-│      int64      │
-├─────────────────┤
-│    66044470     │
-│ (66.04 million) │
-└─────────────────┘
-```
-
-### 1. Github Codespaces
+### Github Codespaces
 
 Create a new codespace from the [workshop repository](https://github.com/OvertureMaps/workshop) in 3 clicks:
 
 ![Codespace](img/codespaces.png)
 
-### 2. Launch JupyterLab
+### Launch JupyterLab
 
 Once your codespace is active, you can open it in JupyterLab to easily run interactive notebooks
 ![Jupyter Lab](img/jupyter-lab.png)

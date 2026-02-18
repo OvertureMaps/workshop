@@ -3,51 +3,73 @@
 | [<< 3. GeoParquet & DuckDB](3-geoparquet-duckdb.md) | [Home](README.md) | [5. Base Theme >>](5-base-theme.md) |
 
 - [4. The Global Entity Reference System (GERS)](#4-the-global-entity-reference-system-gers)
-  - [1. Exploring Overture's Divisions and Hierarchies with GERS](#1-exploring-overtures-divisions-and-hierarchies-with-gers)
-  - [2. Data Changelog](#2-data-changelog)
-    - [1. Identify new places in Salt Lake City](#1-identify-new-places-in-salt-lake-city)
-  - [3. Bridge Files](#3-bridge-files)
-  - [4. GERS Onboarding Services](#4-gers-onboarding-services)
-    - [1. "Gersifying" buildings in Fused.io](#1-gersifying-buildings-in-fusedio)
-    - [2. Adding GERS IDs to places with Wherobots](#2-adding-gers-ids-to-places-with-wherobots)
 
 A GERS ID is a 128-bit unique identifier that Overture keeps stable across data releases and updates. For themes like Buildings, Divisions, Places, and Transportation, Overture performs feature-level conflation to preserve ID stability.
 
 Themes that do not conflate multiple input sources use deterministic hashes to ensure consistent matching from input datasets, such as OpenStreetMap, to an 128-bit ID that is fully compatible with the larger GERS ecosystem.
 
-## 1. Exploring Overture's Divisions and Hierarchies with GERS
 
-Overture's _Divisions_ theme contains administrative boundaries and points for global administrative areas.
+### Setup instructions
 
-1. In this example, we'll use DuckDB to connect to Azure and read the parquet files from Azure blob storage. These are mirrors of the same files we were previously accessing on Amazon S3.
+First, refer to the [setup instructions here](https://labs.overturemaps.org/workshop/#workshop-setup). 
 
-    ```sql
+If you're running through these queries locally using DuckDB, be sure to specify a database, such as `duckdb workshop.dbb`, so that you save tables and views that will persist in a future session. Another option is to attach the following database in DuckDB to access the latest Overture data. 
+
+```sql
+LOAD spatial;
+ATTACH 'https://labs.overturemaps.org/data/latest.dbb' as overture;
+
+-- Now you can just reference `overture.division` for type=division features
+SELECT count(1) from overture.division;
+```
+You can also run these queries in a Github codespace. [See the Codespace instructions here](https://labs.overturemaps.org/workshop/#workshop-setup)
+
+
+## Exploring Overture's Divisions and Hierarchies with GERS
+
+Overture's Divisions theme contains boundaries and points for administrative areas around the world. GERS IDs are intended to be the key to unlock interoperability both inside and outside of Overture data. This example shows how Overture features within the same theme can reference one-another via GERS.
+
+1. Let's create a table for all the `division` entities that are tied to the GERS ID for Salt Lake City.
+
+```sql
     CREATE TABLE slc AS (
         SELECT
             *
         FROM
-            read_parquet('az://overturemapswestus2.blob.core.windows.net/release/2025-04-23.0/theme=divisions/type=division/*')
+            overture.division
         WHERE
             -- ID for Salt Lake City, Utah
-            id = '0856ea4bbfffffff01c731f9bbbf7873'
+            id = 'fa6ba2e0-cc93-4f51-bfe9-ef41e33741c9'
     );
-    ```
+```
 
 2. When we query that table, we can see the Divisions hierarchy: Salt Lake City is a locality in Salt Lake County, which is in the region of Utah, within the country of the United States.
 
-    ```sql
-    SELECT
+```sql
+  SELECT
         h.name,
         h.subtype,
         h.division_id
     FROM
         slc
     CROSS JOIN UNNEST(hierarchies[1]) AS t(h);
-    ```
+```
+
+```
+┌──────────────────┬──────────┬──────────────────────────────────────┐
+│       name       │ subtype  │             division_id              │
+│     varchar      │ varchar  │               varchar                │
+├──────────────────┼──────────┼──────────────────────────────────────┤
+│ South Salt Lake  │ locality │ fa6ba2e0-cc93-4f51-bfe9-ef41e33741c9 │
+│ Salt Lake County │ county   │ 53d671bc-c294-44fb-a767-169bffedc5cb │
+│ Utah             │ region   │ 506017c0-8932-44b5-b82c-92f9dcffdcf1 │
+│ United States    │ country  │ f39eb4af-5206-481b-b19e-bd784ded3f05 │
+└──────────────────┴──────────┴──────────────────────────────────────┘
+```
 
 3. If we wanted to retrieve the actual polygons for these divisions, we can search the `division_area` type of the divisions theme to obtain these particular division IDs:
 
-    ```sql
+```sql
     COPY(
         SELECT
             names.primary AS name,
@@ -55,7 +77,7 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
             id,
             geometry
         FROM
-            read_parquet('az://overturemapswestus2.blob.core.windows.net/release/2025-04-23.0/theme=divisions/type=division_area/*') areas
+            overture.division_area
         WHERE
             division_id IN (
                 SELECT
@@ -64,36 +86,33 @@ Overture's _Divisions_ theme contains administrative boundaries and points for g
                     slc
                 CROSS JOIN UNNEST(hierarchies[1]) AS t(h)
             )
-    ) TO 'results/slc_hierarchies.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
-    ```
+    ) TO 'slc_hierarchies.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
+```
 
 4. Load `slc_hierarchies.geojson` into KeplerGL and you can see the complete hierarchy of divisions:
     ![Salt lake City Hierarchies](img/slc_hierarchy.jpg)
 
-GERS IDs are intended to be the key to unlock interoperability both inside and outside of Overture data. This example showed how Overture features within the same theme can reference one-another via GERS.
 
-## 2. Data Changelog
+## Working with the Changelog
 
-Every Overture release includes a changelog with a high level overview of data added, removed, or changed, based on the ID.
+1. Every Overture release includes a changelog with a high level overview of data added, removed, or changed, based on the ID. The changelog is partitioned by `theme`, `type`, and `change_type`. To identify all of the features added in Salt Lake City, we can use the following query. *Note: If a feature is added or "new" in Overture it does not necessarily mean that feature is "new on the Earth".*
 
-### 1. Identify new places in Salt Lake City
-
-1. The changelog is partitioned by `theme`, `type`, and `change_type`. To identify all of the features added in Salt Lake City, we can use the following query:
-
-    ```sql
+```sql
     SELECT
         id
     FROM
-        read_parquet('s3://overturemaps-us-west-2/changelog/2025-04-23.0/theme=places/*/*/*.parquet')
+        read_parquet('s3://overturemaps-us-west-2/changelog/2026-01-21.0/theme=places/*/*/*.parquet')
     WHERE
         change_type = 'added'
         AND bbox.xmin > -112.461 AND bbox.xmax < -111.073
         AND bbox.ymin > 40.296 AND bbox.ymax < 40.955
-    ```
+```
 
-1. Now we can join this list of new places to the places theme by ID and write out a new GeoJSON file:
+This gives us a list of GERS IDs for places in Salt Lake City that were added in the latest release. But what else do we know about these places?
 
-    ```sql
+2. To find out more about the places added in the latest release, let's join the IDs from the changelog to the latest places data We'll write the results to a new GeoJSON file.
+
+```sql
     COPY(
         SELECT
             places.id as id,
@@ -103,52 +122,54 @@ Every Overture release includes a changelog with a high level overview of data a
             CAST(sources AS JSON) as sources,
             geometry
         FROM
-            read_parquet('s3://overturemaps-us-west-2/release/2025-04-23.0/theme=places/type=place/*') places
+            overture.place places
         JOIN (
             SELECT
                 id
             FROM
-                read_parquet('s3://overturemaps-us-west-2/changelog/2025-04-23.0/theme=places/*/*/*.parquet')
+                read_parquet('s3://overturemaps-us-west-2/changelog/2026-01-21.0/theme=places/*/*/*.parquet')
             WHERE change_type = 'added'
             AND bbox.xmin > -112.461 AND bbox.xmax < -111.073 AND bbox.ymin > 40.296 AND bbox.ymax < 40.955
             ) changelog
         ON places.id = changelog.id
         ORDER BY places.id ASC
         LIMIT 100
-    ) TO 'results/new_places_slc.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
-    ```
+    ) TO 'new_places_slc.geojson' WITH (FORMAT GDAL, DRIVER GeoJSON);
+```
 
-## 3. Bridge Files
+## Working with Bridge Files
 
-Bridge files are published mappings of ID <--> Source IDs for Overture features that came from an established dataset with a meaningful `record_id`. ML-Derived buildings, for example, do not have stable meaningful input IDs, but place records from Meta have corresponding IDs that reference public Facebook pages.
+With each release, Overture publishes bridge files that map GERS ID to Source IDs (`record_id`)from the datasets we use to generate the latest released data. We only create and publish bridge files for datasets with a meaningful `record_id`. ML-Derived buildings, for example, do not have stable meaningful input IDs, but place records from Meta have corresponding IDs that reference public Facebook pages.
 
 A feature's `sources` attribute lists the original source of the feature and any additional attributes that Overture has added.
 
-We can use the `meta` bridge file for places to easily map the GERS ID back to the source ID.
 
-1. Lookup the Facebook pages for the new places in Salt Lake City:
 
-    ```sql
+1. Lookup the Facebook pages for the new places in Salt Lake City
+
+We can use access the bridge file for Meta places to connect the published GERS IDs to the `record_id` for Meta's Facebook data.
+
+```sql
     COPY(
         SELECT
             'https://facebook.com/' || cast(bridge.record_id as varchar) AS facebook_page,
             slc_places.*
-        FROM ST_READ('results/new_places_slc.geojson') slc_places JOIN (
+        FROM ST_READ('new_places_slc.geojson') slc_places JOIN (
             SELECT
                 id,
                 record_id
             FROM
-                read_parquet('s3://overturemaps-us-west-2/bridgefiles/2025-04-23.0/dataset=meta/theme=places/type=place/*')
+                read_parquet('s3://overturemaps-us-west-2/bridgefiles/2026-01-21.0/dataset=meta/theme=places/type=place/*')
         ) bridge ON slc_places.id = bridge.id
         LIMIT 100
-    ) TO 'results/new_places_slc_with_fb_pages.geojson' WITH (FORMAT GDAL, Driver GeoJSON);
-    ```
+    ) TO 'new_places_slc_with_fb_pages.geojson' WITH (FORMAT GDAL, Driver GeoJSON);
+```
 
-## 4. GERS Onboarding Services
+## GERS Onboarding Services
 
 Associating third-party data with GERS can be as simple as a spatial join between the two datasets.
 
-### 1. "Gersifying" buildings in Fused.io
+1. "Gersifying" buildings in Fused.io
 
 Fused has prepared a small app to showcase how their platform can be used to perform spatial joins between an input dataset and Overture's building dataset right in your browser:
 
@@ -158,6 +179,6 @@ Fused has prepared a small app to showcase how their platform can be used to per
 
 (5 min)
 
-### 2. Adding GERS IDs to places with Wherobots
+2. Adding GERS IDs to places with Wherobots
 
 (8 min)
