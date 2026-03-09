@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overture Maps DuckDB Sandbox</title>
+  <link rel="icon" href="img/omf_logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+
+  <style>
+    :root {
+      --om-color-primary: #2c2e7f;
+      --om-color-primary-light: #5362d1;
+      --om-color-primary-lighter: #6673d6;
+      --om-color-primary-lightest: #7985db;
+      --om-link-color: #4051cc;
+      --om-color-bg: #ffffff;
+      --om-color-surface: #f8f8fc;
+      --om-color-text: #333333;
+      --om-color-text-muted: #666666;
+      --om-color-border: #e0e0e0;
+      --om-color-error: #d32f2f;
+      --om-color-success: #2e7d32;
+      --om-color-editor-bg: #1e1e2e;
+      --om-color-editor-text: #cdd6f4;
+      --om-font-body: 'Noto Sans', 'Segoe UI', Roboto, sans-serif;
+      --om-font-heading: 'Montserrat', 'Segoe UI', Roboto, sans-serif;
+      --om-font-mono: 'Menlo', 'Consolas', 'Courier New', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--om-font-body);
+      color: var(--om-color-text);
+      background: var(--om-color-surface);
+      line-height: 1.6;
+    }
+
+    /* Loading Overlay */
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      font-family: var(--om-font-heading);
+    }
+    #loading-overlay.hidden { display: none; }
+    #loading-overlay .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid var(--om-color-border);
+      border-top-color: var(--om-color-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 1.5rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading-overlay p {
+      font-size: 1.1rem;
+      color: var(--om-color-text-muted);
+    }
+    #loading-overlay .error-msg {
+      color: var(--om-color-error);
+      margin-top: 1rem;
+      max-width: 500px;
+      text-align: center;
+    }
+
+    /* Container */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--om-color-primary);
+    }
+    header .logo {
+      height: 48px;
+      width: auto;
+    }
+    header h1 {
+      font-family: var(--om-font-heading);
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--om-color-primary);
+      margin: 0;
+    }
+    header .subtitle {
+      font-size: 0.9rem;
+      color: var(--om-color-text-muted);
+      margin: 0;
+    }
+
+    /* Status Bar */
+    #status-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      background: var(--om-color-bg);
+      border: 1px solid var(--om-color-border);
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-bottom: 1.5rem;
+    }
+    #status-bar .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .status-dot.loading { background: #f59e0b; animation: pulse 1s ease-in-out infinite; }
+    .status-dot.ready { background: var(--om-color-success); }
+    .status-dot.error { background: var(--om-color-error); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* Query Section */
+    .query-section {
+      background: var(--om-color-bg);
+      border: 1px solid var(--om-color-border);
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .query-section .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--om-color-primary);
+      color: white;
+      font-family: var(--om-font-heading);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .query-section .section-desc {
+      padding: 0.75rem 1rem 0;
+      font-size: 0.85rem;
+      color: var(--om-color-text-muted);
+    }
+
+    /* SQL Editor */
+    .editor-wrapper {
+      padding: 0.75rem 1rem;
+    }
+    .sql-editor {
+      width: 100%;
+      min-height: 160px;
+      padding: 0.75rem 1rem;
+      background: var(--om-color-editor-bg);
+      color: var(--om-color-editor-text);
+      border: 2px solid transparent;
+      border-left: 4px solid var(--om-color-primary-light);
+      border-radius: 6px;
+      font-family: var(--om-font-mono);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      resize: vertical;
+      outline: none;
+      tab-size: 2;
+    }
+    .sql-editor:focus {
+      border-color: var(--om-color-primary-light);
+    }
+    #setup-editor {
+      min-height: 30lh;
+      overflow-y: hidden;
+      resize: none;
+    }
+
+    /* Three-zone query editor */
+    .query-zones {
+      display: flex;
+      flex-direction: column;
+    }
+    .sql-zone-editable {
+      min-height: 3lh;
+      resize: vertical;
+    }
+    #query-select {
+      border-radius: 6px 6px 0 0;
+      border-bottom: none;
+      min-height: 8lh;
+    }
+    .sql-zone-locked {
+      background: #2a2a3e;
+      color: #cdd6f4;
+      padding: 0.75rem 1rem;
+      font-family: var(--om-font-mono);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      border-left: 4px solid #e65100;
+      border: 2px solid transparent;
+      border-radius: 0;
+      width: 100%;
+      resize: none;
+      outline: none;
+      tab-size: 2;
+      white-space: pre;
+      overflow: hidden;
+      transition: opacity 0.15s ease;
+    }
+    .sql-zone-locked:focus {
+      border-color: #e65100;
+    }
+    .sql-zone-locked.disabled {
+      opacity: 0.4;
+      border-left-color: #666;
+    }
+    #query-extras {
+      border-radius: 0 0 6px 6px;
+      border-top: none;
+    }
+
+    /* Collapsible sections */
+    .section-header::-webkit-details-marker,
+    .section-header::marker {
+      display: none;
+      content: '';
+    }
+    .section-chevron {
+      display: inline-block;
+      transition: transform 0.2s ease;
+      font-size: 0.7rem;
+    }
+    details[open] > .section-header .section-chevron {
+      transform: rotate(90deg);
+    }
+
+    /* Controls */
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0 1rem 0.75rem;
+    }
+    .btn {
+      padding: 0.5rem 1.25rem;
+      font-family: var(--om-font-heading);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s ease, opacity 0.15s ease;
+    }
+    .btn-primary {
+      background: var(--om-color-primary);
+      color: white;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--om-color-primary-light);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn .btn-spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 0.4rem;
+      vertical-align: middle;
+    }
+
+    .controls-row label {
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .controls-row select {
+      font-family: var(--om-font-body);
+      font-size: 0.8rem;
+      padding: 0.35rem 0.5rem;
+      border: 1px solid var(--om-color-border);
+      border-radius: 4px;
+      background: white;
+    }
+
+    .controls-row .hint {
+      font-size: 0.75rem;
+      color: var(--om-color-text-muted);
+      margin-left: auto;
+    }
+
+    .status-msg {
+      font-size: 0.8rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+    .status-msg.success {
+      color: var(--om-color-success);
+      background: rgba(46, 125, 50, 0.08);
+    }
+    .status-msg.running {
+      color: #f59e0b;
+    }
+
+    /* Error Box */
+    .error-box {
+      margin: 0 1rem 0.75rem;
+      padding: 0.75rem 1rem;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-left: 4px solid var(--om-color-error);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: var(--om-color-error);
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: var(--om-font-mono);
+    }
+    .error-box.hidden { display: none; }
+
+    /* Results Section */
+    #results-section {
+      background: var(--om-color-bg);
+      border: 1px solid var(--om-color-border);
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    #results-section .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: var(--om-color-primary);
+      color: white;
+      font-family: var(--om-font-heading);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .results-meta {
+      font-size: 0.8rem;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .table-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    .table-wrapper thead {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .table-wrapper th {
+      background: #3a3d8f;
+      color: white;
+      font-weight: 600;
+      padding: 0.5rem 0.75rem;
+      text-align: left;
+      white-space: nowrap;
+      border-bottom: 2px solid var(--om-color-primary);
+    }
+    .table-wrapper td {
+      padding: 0.4rem 0.75rem;
+      border-bottom: 1px solid #eee;
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .table-wrapper tr:nth-child(even) { background: var(--om-color-surface); }
+    .table-wrapper tr:hover { background: #eef0ff; }
+
+    .cell-null {
+      color: #999;
+      font-style: italic;
+    }
+    .cell-object {
+      color: var(--om-color-primary-light);
+      font-family: var(--om-font-mono);
+      font-size: 0.75rem;
+    }
+
+    .placeholder {
+      padding: 3rem 1rem;
+      text-align: center;
+      color: var(--om-color-text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Explorer Section */
+    .explorer-top {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+    }
+    .explorer-controls-col {
+      width: 240px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .explorer-control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .explorer-control-group label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--om-color-text-muted);
+    }
+    .explorer-control-group select {
+      font-family: var(--om-font-body);
+      font-size: 0.8rem;
+      padding: 0.35rem 0.5rem;
+      border: 1px solid var(--om-color-border);
+      border-radius: 4px;
+      background: white;
+      width: 100%;
+    }
+    .type-checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      font-size: 0.8rem;
+      border: 1px solid var(--om-color-border);
+      border-radius: 4px;
+      padding: 0.35rem 0.5rem;
+      background: white;
+    }
+    .type-theme-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.15rem 0.5rem;
+      padding: 0.1rem 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .type-theme-row:last-child {
+      border-bottom: none;
+    }
+    .type-theme-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--om-color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      width: 100%;
+    }
+    .type-checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      cursor: pointer;
+      font-weight: 400;
+      padding-left: 0.25rem;
+    }
+    .explorer-bbox-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .bbox-compact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.25rem;
+    }
+    .bbox-field {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .bbox-field label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--om-color-text-muted);
+      width: 1rem;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .bbox-field input {
+      width: 100%;
+      font-family: var(--om-font-mono);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.3rem;
+      border: 1px solid var(--om-color-border);
+      border-radius: 4px;
+      text-align: center;
+    }
+    .bbox-buttons {
+      display: flex;
+      gap: 0.35rem;
+    }
+    .bbox-buttons .btn {
+      flex: 1;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+    }
+    #explorer-map {
+      flex: 1;
+      min-height: 350px;
+      border: 1px solid var(--om-color-border);
+      border-radius: 6px;
+      z-index: 1;
+    }
+    #file-list {
+      overflow-y: auto;
+      max-height: 400px;
+    }
+    .cache-run-btn {
+      flex-shrink: 0;
+      font-size: 0.75rem !important;
+      padding: 0.2rem 0.6rem !important;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.8rem;
+      color: var(--om-color-text-muted);
+    }
+    footer a {
+      color: var(--om-link-color);
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      header { flex-direction: column; text-align: center; }
+      header .logo { height: 36px; }
+      header h1 { font-size: 1.2rem; }
+      .controls-row { flex-direction: column; align-items: stretch; }
+      .controls-row .hint { margin-left: 0; text-align: center; }
+      .explorer-top { flex-direction: column; }
+      .explorer-controls-col { width: 100%; }
+      #explorer-map { min-height: 300px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <p>Initializing DuckDB-WASM...</p>
+    <p style="font-size: 0.85rem; margin-top: 0.5rem; color: #999;">This may download ~30 MB on first visit</p>
+    <div id="loading-error" class="error-msg" style="display:none;"></div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <img src="img/omf_logo.png" alt="Overture Maps Foundation" class="logo">
+      <div>
+        <h1>Overture Maps DuckDB Sandbox</h1>
+        <p class="subtitle">Query Overture Maps GeoParquet data directly in your browser</p>
+      </div>
+    </header>
+
+    <!-- Status Bar -->
+    <div id="status-bar">
+      <div class="status-item">
+        <span id="duckdb-dot" class="status-dot loading"></span>
+        <span id="duckdb-status">Initializing...</span>
+      </div>
+      <div class="status-item" id="release-item" style="display:none;">
+        <span id="release-dot" class="status-dot loading"></span>
+        <span id="release-status">Fetching release...</span>
+      </div>
+    </div>
+
+    <!-- Box 1: Setup (collapsed by default, auto-runs on load) -->
+    <div class="query-section" id="setup-section">
+      <details>
+        <summary class="section-header" style="cursor: pointer; list-style: none;">
+          <span class="section-chevron">&#9654;</span>
+          <span>1. Setup</span>
+        </summary>
+        <div class="editor-wrapper">
+          <textarea id="setup-editor" class="sql-editor" spellcheck="false">-- Install and load extensions
+INSTALL spatial;
+LOAD spatial;
+INSTALL httpfs;
+LOAD httpfs;
+
+-- Configure S3 access (public, unsigned requests)
+SET s3_region = 'us-west-2';
+
+-- Cache parquet footers and HTTP metadata between queries
+SET parquet_metadata_cache = true;
+SET enable_http_metadata_cache = true;
+SET enable_object_cache = true;
+SET http_keep_alive = true;
+SET unsafe_disable_etag_checks = true;
+
+-- Get the latest Overture release version from the STAC catalog
+SET VARIABLE overture_release = (
+    SELECT latest
+    FROM read_json_auto('https://stac.overturemaps.org/catalog.json')
+);
+
+-- Load the STAC collections index (file locations + bounding boxes)
+CREATE TABLE IF NOT EXISTS overture_collections AS
+SELECT * FROM read_parquet(
+    'https://stac.overturemaps.org/' || getvariable('overture_release') || '/collections.parquet'
+);</textarea>
+        </div>
+        <div class="controls-row">
+          <button id="btn-setup" class="btn btn-primary" disabled>Run Setup</button>
+        </div>
+        <div id="setup-error" class="error-box hidden"></div>
+      </details>
+    </div>
+
+    <!-- Box 2: Explorer -->
+    <div class="query-section" id="explorer-section">
+      <details open>
+        <summary class="section-header" style="cursor:pointer;list-style:none;">
+          <span class="section-chevron">&#9654;</span>
+          <span>2. Spatial Extent</span>
+        </summary>
+      <!-- Top row: controls left, map right -->
+      <div class="explorer-top">
+        <!-- Left column: selectors + bbox inputs -->
+        <div class="explorer-controls-col">
+          <div class="explorer-control-group">
+            <label>Types:</label>
+            <div id="type-checkboxes" class="type-checkbox-group">
+              <div class="type-theme-row">
+                <span class="type-theme-label">places</span>
+                <label><input type="checkbox" value="place" checked> place</label>
+              </div>
+              <div class="type-theme-row">
+                <span class="type-theme-label">buildings</span>
+                <label><input type="checkbox" value="building"> building</label>
+                <label><input type="checkbox" value="building_part"> building_part</label>
+              </div>
+              <div class="type-theme-row">
+                <span class="type-theme-label">addresses</span>
+                <label><input type="checkbox" value="address"> address</label>
+              </div>
+              <div class="type-theme-row">
+                <span class="type-theme-label">transport</span>
+                <label><input type="checkbox" value="segment"> segment</label>
+                <label><input type="checkbox" value="connector"> connector</label>
+              </div>
+              <div class="type-theme-row">
+                <span class="type-theme-label">divisions</span>
+                <label><input type="checkbox" value="division"> division</label>
+                <label><input type="checkbox" value="division_area"> division_area</label>
+                <label><input type="checkbox" value="division_boundary"> division_boundary</label>
+              </div>
+              <div class="type-theme-row">
+                <span class="type-theme-label">base</span>
+                <label><input type="checkbox" value="bathymetry"> bathymetry</label>
+                <label><input type="checkbox" value="infrastructure"> infrastructure</label>
+                <label><input type="checkbox" value="land"> land</label>
+                <label><input type="checkbox" value="land_cover"> land_cover</label>
+                <label><input type="checkbox" value="land_use"> land_use</label>
+                <label><input type="checkbox" value="water"> water</label>
+              </div>
+            </div>
+          </div>
+          <div class="explorer-control-group">
+            <label for="bbox-select">Bbox:</label>
+            <select id="bbox-select">
+              <option value="">No filter (show all files)</option>
+              <option value="salt-lake-city">Salt Lake City</option>
+              <option value="new-york">New York</option>
+              <option value="london">London</option>
+              <option value="tokyo">Tokyo</option>
+              <option value="sao-paulo">São Paulo</option>
+              <option value="sydney">Sydney</option>
+              <option value="custom">Custom...</option>
+            </select>
+          </div>
+          <div class="explorer-bbox-inputs">
+            <div class="bbox-compact">
+              <div class="bbox-field"><label>N</label><input type="number" id="bbox-north" placeholder="lat" min="-90" max="90" step="any"></div>
+              <div class="bbox-field"><label>S</label><input type="number" id="bbox-south" placeholder="lat" min="-90" max="90" step="any"></div>
+              <div class="bbox-field"><label>W</label><input type="number" id="bbox-west" placeholder="lon" min="-180" max="180" step="any"></div>
+              <div class="bbox-field"><label>E</label><input type="number" id="bbox-east" placeholder="lon" min="-180" max="180" step="any"></div>
+            </div>
+            <div class="bbox-buttons">
+              <button id="btn-apply-custom-bbox" class="btn btn-primary">Apply</button>
+              <button id="btn-clear-custom-bbox" class="btn btn-primary">Clear</button>
+            </div>
+          </div>
+        </div>
+        <!-- Right column: map -->
+        <div id="explorer-map"></div>
+      </div>
+
+      <!-- Partition table (full width, below) -->
+      <div id="file-list" style="padding: 0 1rem 0.75rem;"></div>
+
+      </details>
+    </div>
+
+    <!-- Box 3: Query -->
+    <div class="query-section" id="query-section">
+      <details open>
+        <summary class="section-header" style="cursor:pointer;list-style:none;">
+          <span class="section-chevron">&#9654;</span>
+          <span>3. Query Overture Data</span>
+        </summary>
+      <p class="section-desc">
+        The <span style="border-left:3px solid #e65100;padding-left:0.3em;">FROM/WHERE</span> clause is generated by the Explorer. Uncheck "Include FROM/WHERE" to write your own query from scratch.
+      </p>
+      <div class="editor-wrapper">
+        <div class="query-zones">
+          <textarea id="query-select" class="sql-editor sql-zone-editable"
+                    spellcheck="false" rows="1">SELECT *</textarea>
+          <textarea id="query-from-where" class="sql-zone-locked"
+                    spellcheck="false">-- Select a type and bounding box in the Explorer above</textarea>
+          <textarea id="query-extras" class="sql-editor sql-zone-editable"
+                    spellcheck="false" rows="1">LIMIT 100</textarea>
+        </div>
+      </div>
+      <div class="controls-row">
+        <button id="btn-query" class="btn btn-primary" disabled>Run Query</button>
+        <label><input type="checkbox" id="from-where-enabled" checked> Include FROM/WHERE</label>
+        <span class="hint">Ctrl+Enter to run</span>
+      </div>
+      <div id="query-error" class="error-box hidden"></div>
+      </details>
+    </div>
+
+    <!-- Results -->
+    <div id="results-section">
+      <details open>
+        <summary class="section-header" style="cursor:pointer;list-style:none;">
+          <span class="section-chevron">&#9654;</span>
+          <span>Results</span>
+          <span class="results-meta" id="results-meta"></span>
+        </summary>
+      <div id="results-container">
+        <p class="placeholder">Run a query to see results here.</p>
+      </div>
+      </details>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <a href="https://docs.overturemaps.org" target="_blank">Overture Maps Docs</a>
+      &middot;
+      <a href="https://duckdb.org/docs" target="_blank">DuckDB Docs</a>
+      &middot;
+      <a href="https://github.com/OvertureMaps" target="_blank">GitHub</a>
+    </footer>
+  </div>
+
+  <!-- JavaScript -->
+  <!-- Leaflet (must load before explorer.js) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+
+  <!-- Sandbox core logic (classic script, sets up event handlers and exposes globals) -->
+  <script src="js/sandbox.js"></script>
+
+  <!-- Explorer (classic script, uses Leaflet and window.duckdbConn) -->
+  <script src="js/explorer.js"></script>
+
+  <!-- DuckDB-WASM initialization (module script for importmap support) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@duckdb/duckdb-wasm": "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm/+esm",
+        "apache-arrow": "https://cdn.jsdelivr.net/npm/apache-arrow/+esm"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as duckdb from '@duckdb/duckdb-wasm';
+
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loadingError = document.getElementById('loading-error');
+    const duckdbDot = document.getElementById('duckdb-dot');
+    const duckdbStatus = document.getElementById('duckdb-status');
+    const btnSetup = document.getElementById('btn-setup');
+
+    async function initDuckDB() {
+      try {
+        const tInit = performance.now();
+        console.log('[init] Selecting DuckDB-WASM bundle...');
+        const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
+        const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
+        console.log(`[init] Bundle selected (${Math.round(performance.now() - tInit)} ms)`);
+
+        const workerUrl = URL.createObjectURL(
+          new Blob([`importScripts("${bundle.mainWorker}");`], { type: 'text/javascript' })
+        );
+
+        const worker = new Worker(workerUrl);
+        const logger = new duckdb.ConsoleLogger();
+        const db = new duckdb.AsyncDuckDB(logger, worker);
+
+        const tInstantiate = performance.now();
+        console.log('[init] Instantiating DuckDB-WASM...');
+        await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+        console.log(`[init] DuckDB ready (${Math.round(performance.now() - tInstantiate)} ms)`);
+        URL.revokeObjectURL(workerUrl);
+
+        // Configure filesystem to enable range request probing via GET
+        // (HEAD returns 200 on S3/CloudFront, so the HEAD probe fails;
+        //  this enables the GET fallback with Range: bytes=0-0 which returns 206)
+        await db.open({
+          path: ':memory:',
+          filesystem: {
+            allowFullHTTPReads: true,
+          },
+        });
+
+        // Expose to window for sandbox.js and explorer.js
+        window.duckdbDB = db;
+
+        // DuckDB is ready
+        duckdbDot.className = 'status-dot ready';
+        duckdbStatus.textContent = 'DuckDB Ready';
+        btnSetup.disabled = false;
+        loadingOverlay.classList.add('hidden');
+
+        // Auto-run setup (defined in sandbox.js)
+        await window.sandboxRunSetup();
+      } catch (err) {
+        duckdbDot.className = 'status-dot error';
+        duckdbStatus.textContent = 'Init failed';
+        loadingError.style.display = 'block';
+        loadingError.textContent = `Failed to initialize DuckDB-WASM: ${err.message}`;
+      }
+    }
+
+    initDuckDB();
+  </script>
+</body>
+</html>
