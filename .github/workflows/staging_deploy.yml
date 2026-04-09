@@ -6,10 +6,12 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
-  id-token: write
   contents: read
-  pull-requests: write
 
 jobs:
   build:
@@ -17,10 +19,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@e65c17d16e57e481586a6a5a0282698790062f92 # v1.300.0
         with:
           ruby-version: '3.3'
           bundler-cache: true
@@ -35,15 +39,17 @@ jobs:
       - name: Build Jekyll site
         run: |
           if [ -f Gemfile ]; then
-            bundle exec jekyll build --baseurl "/${{ github.event.repository.name }}/pr/${{ github.event.number }}"
+            bundle exec jekyll build --baseurl "/${GITHUB_EVENT_REPOSITORY_NAME}/pr/${PR_NUMBER}"
           else
-            jekyll build --baseurl "/${{ github.event.repository.name }}/pr/${{ github.event.number }}"
+            jekyll build --baseurl "/${GITHUB_EVENT_REPOSITORY_NAME}/pr/${PR_NUMBER}"
           fi
         env:
           JEKYLL_ENV: production
+          GITHUB_EVENT_REPOSITORY_NAME: ${{ github.event.repository.name }}
+          PR_NUMBER: ${{ github.event.number }}
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: build-artifact
           path: _site
@@ -56,33 +62,42 @@ jobs:
     environment:
       name: staging
       url: https://staging.overturemaps.org/${{ github.event.repository.name }}/pr/${{ github.event.number }}/index.html
+    permissions:
+      id-token: write # Required for OIDC token exchange with AWS
+      pull-requests: write # Required to post comments on the PR
 
     steps:
       - name: Configure AWS credentials 🔐
-        uses: aws-actions/configure-aws-credentials@v6
+        uses: aws-actions/configure-aws-credentials@ec61189d14ec14c8efccab744f656cffd0e33f37 # v6.1.0
         with:
           role-to-assume: arn:aws:iam::763944545891:role/pages-staging-oidc-overturemaps
           aws-region: us-west-2
 
       - name: Download artifacts 📥
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: build-artifact
           path: build
 
       - name: Copy to S3
         run: |
-          aws s3 sync --delete build s3://overture-managed-staging-usw2/gh-pages/${{ github.event.repository.name }}/pr/${{ github.event.number }}/
+          aws s3 sync --delete build "s3://overture-managed-staging-usw2/gh-pages/${GITHUB_EVENT_REPOSITORY_NAME}/pr/${PR_NUMBER}/"
+        env:
+          GITHUB_EVENT_REPOSITORY_NAME: ${{ github.event.repository.name }}
+          PR_NUMBER: ${{ github.event.number }}
 
       - name: Bust the Cache
-        run: aws cloudfront create-invalidation --distribution-id E1KP2IN0H2RGGT --paths "/${{ github.event.repository.name }}/pr/${{ github.event.number }}/*"
+        run: aws cloudfront create-invalidation --distribution-id E1KP2IN0H2RGGT --paths "/${GITHUB_EVENT_REPOSITORY_NAME}/pr/${PR_NUMBER}/*"
+        env:
+          GITHUB_EVENT_REPOSITORY_NAME: ${{ github.event.repository.name }}
+          PR_NUMBER: ${{ github.event.number }}
 
       - name: Get deploy timestamp
         id: timestamp
         run: echo "time=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
 
       - name: Comment on PR
-        uses: marocchino/sticky-pull-request-comment@v3
+        uses: marocchino/sticky-pull-request-comment@d4d6b0936434b21bc8345ad45a440c5f7d2c40ff # v3.0.3
         with:
           message: |
             ## 🚀 Workshop branch preview deployed!
