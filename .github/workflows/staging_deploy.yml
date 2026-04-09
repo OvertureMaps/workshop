@@ -63,10 +63,8 @@ jobs:
       name: staging
       url: https://staging.overturemaps.org/${{ github.event.repository.name }}/pr/${{ github.event.number }}/index.html
     permissions:
-      # Required for OIDC token exchange with AWS
-      id-token: write
-      # Required to post comments on the PR
-      pull-requests: write
+      id-token: write # Required for OIDC token exchange with AWS
+      pull-requests: write # Required to post comments on the PR
 
     steps:
       - name: Configure AWS credentials 🔐
