@@ -1,6 +1,6 @@
 # 1. What is Overture Maps?
 
-| [View as Slideshow](slides/#/0/1) | [Home](README.md) | [2. Data Access >>](2-accessing-data.md) |
+| [View as Slideshow](https://labs.overturemaps.org/workshop/slides/index.html#/0/1) | [Home](README.md) | [2. Data Access >>](2-accessing-data.md) |
 
 ![Overture Maps Homepage](img/homepage.png)
 
