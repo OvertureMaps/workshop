@@ -4,6 +4,8 @@
 - GERS IDs identify real world entities such as road segments
 - Simplifies integrating & exchanging data layers
 
+Lesson: [4-gers](//labs.overturemaps.org/workshop/4-gers.html)
+
 <<<
 
 ## How does GERS Work?

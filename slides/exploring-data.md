@@ -16,3 +16,5 @@
 <<<
 
 Continue the Workshop at [labs.overturemaps.org/workshop](//labs.overturemaps.org/workshop/2-accessing-data.html)
+
+Notebook: `notebooks/1-overturemaps-lonboard.ipynb`
