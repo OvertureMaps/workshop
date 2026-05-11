@@ -1,7 +1,21 @@
 .gitignore
-data/.DS_Store
-data/*.dbb
-data/mydb.dbb.wal
-data/na_peaks.geojson
+# source data (download separately)
+data/
+#data/.DS_Store
+#data/*.dbb
+#data/mydb.dbb.wal
+#data/na_peaks.geojson
 data_backup/*
 notebooks/.ipynb_checkpoints/
+.ipynb_checkpoints/
+# Notebook outputs 
+output/
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.python-version
+
+
