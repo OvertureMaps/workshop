@@ -1,0 +1,35 @@
+feature_code,name,source
+AL015,Building,MGCP TRD 3.0 (renamed AL013 in TDSv6)
+EB020,Thicket,TDS DCS Extraction Guide v7.1
+EC030,Trees,TDS DCS Extraction Guide v7.1
+BA030,Island,TDS DCS Extraction Guide v7.1
+DA010,Soil Surface Region,TDS DCS Extraction Guide v7.1
+ED010,Marsh,TDS DCS Extraction Guide v7.1
+AM070,Storage Tank,TDS DCS Extraction Guide v7.1
+BH080,,
+EB010,Grassland,TDS DCS Extraction Guide v7.1
+BA040,Tidal Water,TDS DCS Extraction Guide v7.1
+BH020,Navigable Canal,TDS DCS Extraction Guide v7.1
+AL020,Built-up Area,TDS DCS Extraction Guide v7.1
+EA010,Crop Land,TDS DCS Extraction Guide v7.1
+BH140,River,TDS DCS Extraction Guide v7.1
+AC000,,
+AK100,Golf Course,TDS DCS Extraction Guide v7.1
+BB005,Harbour,TDS DCS Extraction Guide v7.1
+BB190,,
+GB045,Stopway,TDS DCS Extraction Guide v7.1
+BB140,,
+AA012,,
+AM010,Storage Depot,TDS DCS Extraction Guide v7.1
+BH130,,
+BB090,Dry Dock,TDS DCS Extraction Guide v7.1
+GB005,Land Aerodrome,TDS DCS Extraction Guide v7.1
+GB015,Apron,TDS DCS Extraction Guide v7.1
+AD010,Electric Power Station,TDS DCS Extraction Guide v7.1
+GB055,Runway,TDS DCS Extraction Guide v7.1
+GB075,Taxiway,TDS DCS Extraction Guide v7.1
+AT050,,
+AM040,Mineral Pile,TDS DCS Extraction Guide v7.1
+AL170,Public Square,TDS DCS Extraction Guide v7.1
+AK040,Sports Ground,TDS DCS Extraction Guide v7.1
+AD030,Power Substation,TDS DCS Extraction Guide v7.1
