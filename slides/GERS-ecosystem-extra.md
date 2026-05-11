@@ -90,4 +90,6 @@ Some bridge file examples
 
 Third party services that offer a gers id lookup service
 
->>>
+<<<
+
+Continue the Workshop at [labs.overturemaps.org/workshop](//labs.overturemaps.org/workshop/4-gers.html)

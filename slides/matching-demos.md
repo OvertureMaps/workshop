@@ -28,7 +28,8 @@ to its corresponding feature in dataset B.
 Matching **administrative boundaries** between the U.S. State Department's
 Large Scale International Boundaries (LSIB) and Overture's `division_boundary`.
 
-`notebooks/3-lsib_overture.ipynb`
+Lesson: [6-lsib-demo](//labs.overturemaps.org/workshop/6-lsib-demo.html)
+Notebook: `notebooks/3-lsib-demo.ipynb`
 
 Notes:
 LSIB is the State Department's reference for international boundaries.
@@ -121,7 +122,8 @@ After scoring, every pair lands in one of:
 
 Matching NGA's MGCP polygon features (buildings + base-theme polygons) against Overture.
 
-`notebooks/4-buildings-matching.ipynb`
+Lesson: [7-buildings-matching](//labs.overturemaps.org/workshop/7-buildings-matching.html)
+Notebook: `notebooks/4-buildings-matching.ipynb`
 
 <<<
 
