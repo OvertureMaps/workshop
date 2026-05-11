@@ -1,0 +1,21 @@
+[project]
+name = "workshop"
+version = "0.1.0"
+description = "Demos and tutorials for working with Overture data and GERS"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "duckdb>=1.0",
+    "fiona>=1.9",
+    "geopandas>=0.14",
+    "jupyter>=1.0",
+    "lonboard>=0.16.0",
+    "matplotlib>=3.7",
+    "notebook>=7.0",
+    "numpy>=1.24",
+    "overturemaps>=1.0.0",
+    "pandas>=2.0",
+    "pyarrow>=14.0",
+    "pystac>=1.14.3",
+    "shapely>=2.0",
+]
