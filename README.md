@@ -1,13 +1,9 @@
-# Overture Maps Workshop
-
 ## Resources
 
 | Name | Description |
 | ---- | ----------- |
-| [Overture Explore Page](//explore.overturemaps.org) | Easiest place to get an overview of Overture data in an X-Ray map view  |
-| [Overture Documentation](//docs.overturemaps.org/) | Schema definition and examples of how to access and work with Overture data  |
-| [DuckDB](https://duckdb.org/) | A fast in-process database system for analytics and data manipulation |
-| [Fused.io](//fused.io) | A cloud-based analytics platform with User Defined Functions and embedded map visualization. |
+| [Overture Explorer](https://explore.overturemaps.org) | Inspect and explore Overture data and schema |
+| [Overture Documentation](https://docs.overturemaps.org/) | Learn how to access and work with Overture data and schema |
 
 ---
 
@@ -15,25 +11,61 @@
 
 [View as Slideshow](https://labs.overturemaps.org/workshop/slides/index.html)
 
-### 1. [What is Overture Maps?](1-what-is-overture.md)
-
-### 2. [Exploring Overture Maps Data](2-accessing-data.md)
-
-### 3. [Accessing Overture Maps GeoParquet with DuckDB](3-geoparquet-duckdb.md)
-
-### 4. [Global Entity Reference System (GERS)](4-gers.md)
-
-### 5. [Base Theme](5-base-theme.md)
+1. [What is Overture Maps?](1-what-is-overture.md)
+2. [Exploring Overture Maps Data](2-accessing-data.md)
+3. [Accessing Overture Maps GeoParquet with DuckDB](3-geoparquet-duckdb.md)
+4. [Global Entity Reference System (GERS)](4-gers.md)
+5. [Base Theme](5-base-theme.md)
+6. [LSIB ↔ Overture matching demo](6-lsib-demo.md)
 
 ---
 
 ## Workshop Setup
 
-This workshop can be run either locally with DuckDB and a local Jupyter Notebook environment or in the cloud with Github codespaces (instructions below).
+### Local setup (recommended)
 
-_DuckDB Tip!_ When launching DuckDB, be sure to specify a database, such as `duckdb workshop.dbb`. You can now save tables and views that will persist in a future session.
+Install [uv](https://docs.astral.sh/uv/), a fast Python environment manager:
 
-_Experimental_: Attach the following database in DuckDB to access the latest Overture data:
+```bash
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Windows: see https://docs.astral.sh/uv/getting-started/installation/
+```
+
+Clone the repo and start JupyterLab:
+
+```bash
+git clone https://github.com/OvertureMaps/workshop.git
+cd workshop
+uv sync
+uv run jupyter lab
+```
+
+`uv sync` installs all dependencies into a project-local `.venv/` based on the locked versions in `uv.lock`. First run takes a minute; subsequent runs are instant. You don't need to activate the venv manually — `uv run` handles it.
+
+### Alternative: pip
+
+If you prefer pip and already have a Python environment:
+
+```bash
+git clone https://github.com/OvertureMaps/workshop.git
+cd workshop
+pip install -r requirements.txt
+jupyter lab
+```
+
+The `requirements.txt` is generated from `pyproject.toml` and `uv.lock`, so versions match the uv setup.
+
+> **Note:** GitHub Codespaces support is being updated for the new setup. For now, please use one of the local setup paths above.
+
+---
+
+### Working with DuckDB
+
+When launching DuckDB, specify a database name like `duckdb workshop.dbb` so you can save tables and views that persist across sessions.
+
+To attach Overture's hosted DuckDB database (experimental):
 
 ```sql
 LOAD spatial;
@@ -42,14 +74,3 @@ ATTACH 'https://labs.overturemaps.org/data/latest.ddb' as overture;
 -- Now you can just reference `overture.place` for type=place features
 SELECT count(1) from overture.place;
 ```
-
-### Github Codespaces
-
-Create a new codespace from the [workshop repository](https://github.com/OvertureMaps/workshop) in 3 clicks:
-
-![Codespace](img/codespaces.png)
-
-### Launch JupyterLab
-
-Once your codespace is active, you can open it in JupyterLab to easily run interactive notebooks
-![Jupyter Lab](img/jupyter-lab.png)

@@ -1,21 +1,56 @@
-.gitignore
-# source data (download separately)
+# ---- Data --------------------------------------------------------------
+# Source data is downloaded separately by participants — see the lesson
+# markdowns and notebooks for download instructions.
 data/
-#data/.DS_Store
-#data/*.dbb
-#data/mydb.dbb.wal
-#data/na_peaks.geojson
-data_backup/*
-notebooks/.ipynb_checkpoints/
-.ipynb_checkpoints/
-# Notebook outputs 
+data_backup/
+
+# ---- Generated outputs -------------------------------------------------
+# Notebook-generated artifacts. Anything in results/ that should be
+# committed (e.g. small derived CSVs used as workshop inputs) should be
+# force-added with `git add -f`.
 output/
-# Python
+
+# ---- DuckDB scratch databases ------------------------------------------
+# DuckDB writes .dbb files and accompanying WAL files as it runs.
+# These are local working state, never commit them.
+*.dbb
+*.dbb.wal
+notebooks/tmp.dbb
+
+# ---- Jupyter -----------------------------------------------------------
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# ---- Python ------------------------------------------------------------
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+
+# ---- Virtual environments ----------------------------------------------
+# uv creates .venv/ at the project root; legacy venv/ and env/ kept here
+# for users who set up their own environments by other means.
 .venv/
 venv/
-.python-version
+env/
 
+# uv cache (in case anyone runs uv with --cache-dir set inside the repo)
+.uv-cache/
 
+# ---- Editors / IDEs ----------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ---- OS metadata -------------------------------------------------------
+.DS_Store
+Thumbs.db
+
+# ---- Secrets / local config --------------------------------------------
+.env
+.env.local
+*.local
