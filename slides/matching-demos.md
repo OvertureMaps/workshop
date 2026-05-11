@@ -28,9 +28,6 @@ to its corresponding feature in dataset B.
 Matching **administrative boundaries** between the U.S. State Department's
 Large Scale International Boundaries (LSIB) and Overture's `division_boundary`.
 
-Lesson: [6-lsib-demo](//labs.overturemaps.org/workshop/6-lsib-demo.html)
-Notebook: `notebooks/3-lsib-demo.ipynb`
-
 Notes:
 LSIB is the State Department's reference for international boundaries.
 The notebook produces a crosswalk linking each LSIB segment to its
@@ -114,6 +111,12 @@ After scoring, every pair lands in one of:
 2. Building it is _iterative_ — bucketing, filters, and thresholds shape the result
 3. _Disagreements are findings, not failures_
 
+<<<
+
+Lesson: [6-lsib-demo](//labs.overturemaps.org/workshop/6-lsib-demo.html)
+
+Notebook: `notebooks/3-lsib-demo.ipynb`
+
 >>>
 
 ## Demo 2: MGCP polygons ↔ Overture
@@ -121,9 +124,6 @@ After scoring, every pair lands in one of:
 > **Status:** skeleton — full deck will land with the finished lesson
 
 Matching NGA's MGCP polygon features (buildings + base-theme polygons) against Overture.
-
-Lesson: [7-buildings-matching](//labs.overturemaps.org/workshop/7-buildings-matching.html)
-Notebook: `notebooks/4-buildings-matching.ipynb`
 
 <<<
 
@@ -155,3 +155,9 @@ A pair matches when IoU ≥ 0.5, **or** IoU ≥ 0.3 with the Overture centroid i
 | `base/infrastructure`, `base/land_use`, `base/water` | Mostly clean with some aggregation |
 
 _Slide TODO: expand with notebook screenshots_
+
+<<<
+
+Lesson: [7-buildings-matching](//labs.overturemaps.org/workshop/7-buildings-matching.html)
+
+Notebook: `notebooks/4-buildings-matching.ipynb`

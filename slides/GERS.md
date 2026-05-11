@@ -4,8 +4,6 @@
 - GERS IDs identify real world entities such as road segments
 - Simplifies integrating & exchanging data layers
 
-Lesson: [4-gers](//labs.overturemaps.org/workshop/4-gers.html)
-
 <<<
 
 ## How does GERS Work?
@@ -34,3 +32,7 @@ GERS is not just a stable ID. The "S" stands for system.
     <li class="fragment">Bridge files for easy mappings of source IDs to GERS IDs.</li>
     <li class="fragment">Onboarding Services that let anyone easily associate their data with GERS.</li>
 </ol>
+
+<<<
+
+Continue the Workshop at [labs.overturemaps.org/workshop](//labs.overturemaps.org/workshop/4-gers.html)
