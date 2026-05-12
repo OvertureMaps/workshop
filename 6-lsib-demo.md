@@ -1,8 +1,8 @@
 # 6. LSIB <-> Overture matching demo
 
-| [<< 5. Base Theme](5-base-theme.md) | [Home](README.md) | >> |
+| [<< 5. Base Theme](5-base-theme.md) | [Home](README.md) | [7. Matching polygon features to Overture >>](7-buildings-matching.md) |
 
-This page is a companion to companion to the LSIB <-> Overture matching demo in this notebook: `3-lsib_overture.ipynb`. The notebook is the runnable
+This page is a companion to companion to the LSIB <-> Overture matching demo in this notebook: `lsib-matching.ipynb`. The notebook is the runnable
 artifact; this file holds the conceptual background — why we made the
 choices we did, what each decision point means, and how to use the outputs
 beyond the notebook itself.
@@ -372,3 +372,7 @@ the headline:
    something the two datasets are (correctly) saying different things
    about. Preserve both sides' metadata in the output so downstream users
    can read the findings in context.
+
+---
+
+| [<< 5. Base Theme](5-base-theme.md) | [Home](README.md) | [7. Matching polygon features to Overture >>](7-buildings-matching.md) |

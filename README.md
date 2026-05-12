@@ -15,6 +15,8 @@
 4. [Global Entity Reference System (GERS)](4-gers.md)
 5. [Base Theme](5-base-theme.md)
 6. [LSIB ↔ Overture matching demo](6-lsib-demo.md)
+7. [Matching polygon features to Overture](7-buildings-matching.md)
+8. [Matching concepts and pipeline context](8-matching-concepts.md)
 
 ---
 
