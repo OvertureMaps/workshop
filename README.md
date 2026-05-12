@@ -9,8 +9,6 @@
 
 ## Workshop Lessons
 
-[View as Slideshow](https://labs.overturemaps.org/workshop/slides/index.html)
-
 1. [What is Overture Maps?](1-what-is-overture.md)
 2. [Exploring Overture Maps Data](2-accessing-data.md)
 3. [Accessing Overture Maps GeoParquet with DuckDB](3-geoparquet-duckdb.md)

@@ -2,6 +2,8 @@
 
 # Overture Maps Data Workshop
 
+_Slides — work in progress_
+
 [github.com/overturemaps/workshop](//github.com/overturemaps/workshop)
 
 [labs.overturemaps.org/workshop/](//labs.overturemaps.org/workshop/)
