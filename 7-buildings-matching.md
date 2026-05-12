@@ -1,6 +1,8 @@
-# Matching MGCP polygon features to Overture
+# 7. Matching polygon features to Overture
 
-This lesson is the prose companion to notebook `4-buildings-matching.ipynb`.
+| [<< 6. LSIB matching demo](6-lsib-demo.md) | [Home](README.md) | [8. Matching concepts and pipeline context >>](8-matching-concepts.md) |
+
+This lesson is the prose companion to notebook `buildings-matching.ipynb`.
 The notebook contains the runnable demo; this page explains what the demo
 is doing, why the methodology is designed the way it is, and how to read
 the results it produces.
@@ -30,7 +32,7 @@ doesn't change.
 
 ## Running the demo
 
-See `notebooks/4-buildings-matching.ipynb` and the project README for
+See `notebooks/buildings-matching.ipynb` and the project README for
 setup instructions. The notebook expects:
 
 - The MGCP W079N26 cell unpacked into `data/mgcp/W079N26/`. Download
@@ -282,109 +284,10 @@ the dataset as a whole; it's the feature code. The notebook
 cross-tabulates the five categories per feature code, and the patterns
 it surfaces are what the next two sections turn into adoption decisions.
 
-## The two-rate diagnostic
+---
 
-The cross-tab is informative but dense. The two-rate diagnostic
-compresses it into two numbers per feature code:
+For a deeper look at the concepts behind cardinality, iterative matching,
+and how this methodology relates to Overture's production pipelines, see
+[Lesson 8: Matching concepts and pipeline context](8-matching-concepts.md).
 
-- **Match rate** — of all polygons in this feature code, what fraction
-  found any Overture match? (The inverse of the unmatched rate.)
-- **Clean rate** — of the polygons that matched, what fraction matched
-  cleanly 1:1 on every pass?
-
-The two move independently, and the combination is more informative
-than either alone:
-
-| Pattern | Example (this cell) | What it means |
-|---|---|---|
-| High match, high clean | AL015 Building (85% / 99%) | Most polygons match; almost all are clean. Direct GERS ID works. |
-| Low match, high clean | BH080 (32% / 100%) | When it matches, it matches well. Coverage gap, not schema mismatch. |
-| High match, low clean | BA030 Island (66% / 3%) | Coverage is fine, but matches fragment. Needs a link table. |
-| Zero match | BA040 Tidal Water, BH140 River | No polygon counterpart at all. Defer to a different geometry or theme. |
-
-Codes that fall in between on both axes (EC030 Trees at 45% / 41%,
-DA010 Soil Surface Region at 27% / 48%) need case-by-case judgment.
-Clean rate is undefined when match rate is zero; the matrix in the
-next section handles this by checking match rate first.
-
-## GERS adoption decision matrix
-
-The two rates per feature code, combined with a minimum-sample
-threshold, produce a categorical assignment. The notebook computes this
-with explicit thresholds (`MATCH_RATE_HIGH = 80`, `CLEAN_RATE_HIGH = 80`,
-`MIN_SAMPLE = 5`) that classify each fcode into one of five buckets:
-
-- **Direct GERS ID attachment.** High match rate, high clean rate. The
-  MGCP feature carries a GERS ID directly, and downstream joins work
-  without further mechanism.
-- **Link table.** High match rate, low clean rate. A `(mgcp_uid,
-  gers_id)` crosswalk handles the many-to-one or one-to-many cases.
-- **Deferred.** Zero match rate. Integration needs a different geometry
-  type or theme.
-- **Review.** Partial match rate, mixed clean rate. Human judgment
-  needed.
-- **Insufficient sample.** Below the minimum sample threshold.
-
-The notebook shows the full matrix. One finding from that run is worth
-surfacing in prose.
-
-### The link-table bucket is nearly empty
-
-The skeleton anticipated this bucket would be substantial: feature codes
-that match often but fragment when they do. The matrix run disagrees.
-The codes that fragment in this cell (BA030 Island, EC030 Trees) have
-moderate match rates, not high ones, so they land in `review` rather
-than `link table`. The codes with high match rates don't fragment.
-
-This is a finding about the data, not a flaw in the methodology. At the
-1:100K capture scale of the Bahamas cell, the cardinality problem
-appears to be largely binary: feature codes either match cleanly or
-don't match at all, with the "matches frequently but messily" middle
-ground appearing more rarely than expected. Whether this generalizes to
-other MGCP cells, to TDS v7, or to denser capture scales is exactly the
-kind of question the next iteration should investigate.
-
-The 80/80 thresholds are conservative. Lowering `MATCH_RATE_HIGH` to 50
-would pull moderate-match codes into `link table`, making the matrix
-look more like the skeleton expected, at the cost of recommending
-direct or link-table adoption for codes that match less than two-thirds
-of the time. The notebook makes the thresholds visible at the top of
-the classifier cell.
-
-## Limitations and next steps
-
-This demo is what it is: a methodology demonstration against one MGCP
-cell. What it shows is encouraging but not generalizable.
-
-- **Polygon-only matching.** The bulk of MGCP's feature coverage at
-  1:100K is captured as points. Point-in-polygon matching is the
-  natural follow-on.
-- **The Bahamas cell is sparse.** Mostly ocean, 1:100K, single
-  contributor, 2015. The methodology behaves differently at higher
-  densities and with more recent data.
-- **The two-tier IoU rule wasn't specifically validated for cross-scale
-  matching.** The ~13% low-tier rate suggests it's catching real
-  matches, but the rule's behavior under very different capture scales
-  is worth characterizing more rigorously.
-- **Centroid containment direction is asymmetric** in a way that may be
-  backwards for `base/land_cover` and similar passes.
-- **Schema version is TRD 3.0, not operational current.** Running the
-  methodology against TDS v7 or current MGCP TRD 4 is the natural next
-  test.
-
-The matrix doesn't tell you what to do; it tells you which decisions to
-make and on what evidence. For the data shown here, the decisions are:
-direct GERS adoption for buildings, defer water-line features to a
-different theme or geometry type, and review the middle band case by
-case.
-
-## References
-
-- Overture's [GERS documentation](https://docs.overturemaps.org/gers/).
-- The [Overture schema reference](https://docs.overturemaps.org/schema/reference/buildings/building/)
-  for `buildings/building` and the `base` theme types.
-- NGA's [Geospatial Analysis Integrity Tool (GAIT)](https://github.com/ngageoint/Geospatial-Analysis-Integrity-Tool)
-  for the canonical MGCP TRD 3.0 attribute and feature-code
-  definitions.
-- The TDS DCS Extraction Guide v7.1 (NGA) for feature-code names
-  shared between MGCP and TDS.
+| [<< 6. LSIB matching demo](6-lsib-demo.md) | [Home](README.md) | [8. Matching concepts and pipeline context >>](8-matching-concepts.md) |
