@@ -121,17 +121,19 @@ Notebook: `notebooks/3-lsib-demo.ipynb`
 
 ## Demo 2: MGCP polygons ↔ Overture
 
-> **Status:** skeleton — full deck will land with the finished lesson
-
 Matching NGA's MGCP polygon features (buildings + base-theme polygons) against Overture.
 
 <<<
 
-### Schema landscape
+### The demo data
 
-MGCP, TRD, TDS, DGIWG — and where GERS fits.
+MGCP cell **W079N26** — western Bahamas, 1:100K, captured 2015 by UK MOD against TRD 3.0.
 
-_Slide TODO_
+- ~1,300 polygon features across 34 fcodes
+- Mostly ocean; sparse capture
+- Seven Overture types: `buildings/building`, `building_part`, and five `base/*` polygon types
+
+_The methodology applies unchanged to denser data and other schema versions._
 
 <<<
 
@@ -140,21 +142,79 @@ _Slide TODO_
 For each polygon pair we compute:
 
 - **IoU** (Intersection over Union)
-- **Centroid containment**
+- **Centroid containment** (Overture centroid inside MGCP polygon)
 
-A pair matches when IoU ≥ 0.5, **or** IoU ≥ 0.3 with the Overture centroid inside the MGCP polygon.
+| Tier | Condition |
+| ---- | --------- |
+| High | `IoU >= 0.5` |
+| Low  | `IoU >= 0.3` _and_ centroid containment |
+
+_Reproject both sides to a metric CRS (UTM 17N) before computing._
 
 <<<
 
-### Results: seven passes
+### Results: clean → friction
 
-| Overture type | Behavior |
-| ------------- | -------- |
-| `buildings/building` | Clean case — ~99% land in the clean bucket |
-| `buildings/building_part` | Schema-design mismatch surfaces in low match count |
-| `base/infrastructure`, `base/land_use`, `base/water` | Mostly clean with some aggregation |
+Seven passes, ordered from cleanest to messiest:
 
-_Slide TODO: expand with notebook screenshots_
+| Pass | Result |
+| ---- | ------ |
+| `buildings/building` | 412 → 350 matched (85%), 99% clean |
+| `buildings/building_part` | 11 / 136 — schema design mismatch (parents, not parts) |
+| `base/infrastructure`, `land_use`, `water` | 69 / 59 / 16; mostly clean, occasional aggregation |
+| `base/land`, `land_cover` | 125 / 247; cardinality diagnostic earns its keep |
+
+<<<
+
+### Cardinality reporting
+
+Each MGCP polygon gets a global label across all seven passes:
+
+- **clean** — every matched pass is 1:1
+- **aggregated** — one MGCP polygon → many Overture features
+- **fragmented** — many MGCP polygons → one Overture feature
+- **mixed** — both patterns appear
+- **unmatched** — no Overture matches in any pass
+
+Notes:
+Unmatched is NOT an audit result. A polygon may be unmatched because of an Overture coverage gap, a real-world change, an IoU threshold miss, or because MGCP captured a feature that has no Overture polygon counterpart at any scale.
+
+<<<
+
+### Two-rate diagnostic
+
+| Pattern | Example | What it means |
+| ------- | ------- | ------------- |
+| High match, high clean | AL015 Building (85% / 99%) | Direct GERS ID works |
+| Low match, high clean | BH080 (32% / 100%) | Coverage gap, not schema mismatch |
+| High match, low clean | BA030 Island (66% / 3%) | Needs a link table |
+| Zero match | BA040 Tidal Water | Defer to a different theme |
+
+<<<
+
+### GERS adoption — five buckets
+
+With thresholds `MATCH_RATE_HIGH=80`, `CLEAN_RATE_HIGH=80`, `MIN_SAMPLE=5`:
+
+<ul>
+  <li class="fragment"><strong>Direct GERS ID attachment</strong> — high match + high clean</li>
+  <li class="fragment"><strong>Link table</strong> — high match + low clean</li>
+  <li class="fragment"><strong>Deferred</strong> — zero match (different geometry/theme needed)</li>
+  <li class="fragment"><strong>Review</strong> — partial / mixed</li>
+  <li class="fragment"><strong>Insufficient sample</strong> — below threshold</li>
+</ul>
+
+<<<
+
+### Finding: the link-table bucket is nearly empty
+
+The skeleton expected it to be substantial. The data disagrees.
+
+At 1:100K capture, the cardinality problem in this cell is binary:
+- Codes with high match rates **don't fragment**
+- Codes that fragment (BA030 Island, EC030 Trees) have **moderate match rates** → they land in `review`
+
+_A finding about the data, not a flaw in the methodology._
 
 <<<
 
