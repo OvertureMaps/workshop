@@ -29,20 +29,8 @@ jobs:
           ruby-version: '3.3'
           bundler-cache: true
 
-      - name: Install Jekyll
-        run: |
-          gem install jekyll bundler
-          if [ -f Gemfile ]; then
-            bundle install
-          fi
-
       - name: Build Jekyll site
-        run: |
-          if [ -f Gemfile ]; then
-            bundle exec jekyll build --baseurl "/${GITHUB_EVENT_REPOSITORY_NAME}/pr/${PR_NUMBER}"
-          else
-            jekyll build --baseurl "/${GITHUB_EVENT_REPOSITORY_NAME}/pr/${PR_NUMBER}"
-          fi
+        run: bundle exec jekyll build --baseurl "/${GITHUB_EVENT_REPOSITORY_NAME}/pr/${PR_NUMBER}"
         env:
           JEKYLL_ENV: production
           GITHUB_EVENT_REPOSITORY_NAME: ${{ github.event.repository.name }}
