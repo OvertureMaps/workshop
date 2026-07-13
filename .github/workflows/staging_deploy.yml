@@ -49,7 +49,7 @@ jobs:
     needs: build
     environment:
       name: staging
-      url: https://staging.overturemaps.org/${{ github.event.repository.name }}/pr/${{ github.event.number }}/README.md
+      url: https://staging.overturemaps.org/${{ github.event.repository.name }}/pr/${{ github.event.number }}/index.html
     permissions:
       id-token: write # Required for OIDC token exchange with AWS
       pull-requests: write # Required to post comments on the PR
@@ -90,7 +90,7 @@ jobs:
           message: |
             ## 🚀 Workshop branch preview deployed!
 
-            You can review your changes at https://staging.overturemaps.org/${{ github.event.repository.name }}/pr/${{ github.event.number }}/README.md
+            You can review your changes at https://staging.overturemaps.org/${{ github.event.repository.name }}/pr/${{ github.event.number }}/index.html
 
             ---
             <sub>♻️ Last refreshed: ${{ steps.timestamp.outputs.time }}</sub>
