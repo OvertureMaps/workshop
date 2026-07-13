@@ -1,3 +1,8 @@
+---
+layout: none
+permalink: /index.html
+---
+
 ## Resources
 
 | Name | Description |
