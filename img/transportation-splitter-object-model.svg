@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <style>
+    .title { font-size: 17px; font-weight: 700; fill: #1a1a1a; }
+    .sub   { font-size: 12px; fill: #555; }
+    .lbl   { font-size: 11px; fill: #333; }
+    .mono  { font-size: 10.5px; fill: #2b4a6f; font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .seg   { stroke: #3b3b3b; stroke-width: 7; stroke-linecap: round; }
+    .segp  { stroke: #d9832a; stroke-width: 7; stroke-linecap: round; }
+    .conn  { fill: #ffffff; stroke: #1a1a1a; stroke-width: 2; }
+    .brk   { stroke: #999; stroke-width: 1; stroke-dasharray: 3 3; }
+    .arw   { stroke: #1a1a1a; stroke-width: 2; fill: none; }
+  </style>
+
+  <!-- ===== TOP: Overture object model ===== -->
+  <text x="40" y="40" class="title">Overture object model</text>
+  <text x="40" y="60" class="sub">One segment, stable GERS id — properties are linear-referenced (LR), not per-segment</text>
+
+  <!-- LR property bracket 0.1–0.6 -->
+  <path d="M184 96 v-10 h320 v10" class="arw" fill="none" stroke="#d9832a" stroke-width="1.5"/>
+  <text x="344" y="80" class="lbl" text-anchor="middle" fill="#b96a17">attribute value X · between [0.1, 0.6]</text>
+
+  <!-- the single segment line -->
+  <line x1="120" y1="130" x2="760" y2="130" class="seg"/>
+  <!-- end + one mid connector -->
+  <circle cx="120" cy="130" r="8" class="conn"/>
+  <circle cx="440" cy="130" r="8" class="conn"/>
+  <circle cx="760" cy="130" r="8" class="conn"/>
+
+  <text x="120" y="162" class="lbl" text-anchor="middle">connector</text>
+  <text x="440" y="162" class="lbl" text-anchor="middle">connector</text>
+  <text x="760" y="162" class="lbl" text-anchor="middle">connector</text>
+  <text x="440" y="192" class="mono" text-anchor="middle">id = 08f2a…  ·  one row  ·  LR range [0.1, 0.6] carries attribute X</text>
+
+  <!-- ===== splitter arrow ===== -->
+  <line x1="440" y1="215" x2="440" y2="262" class="arw"/>
+  <path d="M433 253 l7 9 l7 -9" class="arw"/>
+  <rect x="360" y="222" width="160" height="26" rx="13" fill="#fdf3e3" stroke="#d9832a"/>
+  <text x="440" y="240" class="lbl" text-anchor="middle" fill="#b96a17" font-weight="700">transportation-splitter</text>
+
+  <!-- ===== BOTTOM: split object model ===== -->
+  <text x="40" y="300" class="title">Split object model — routing / analysis-ready</text>
+  <text x="40" y="320" class="sub">Split at every connector and every LR point → each sub-segment has two connectors, no LR; the value applies to the whole sub-segment</text>
+
+  <!-- split points map 0.0→120 0.1→184 0.5→440 0.6→504 1.0→760, y=380 -->
+  <!-- sub-segments (gap between them). property-carrying ones in amber -->
+  <line x1="126" y1="380" x2="178" y2="380" class="seg"/>
+  <line x1="190" y1="380" x2="434" y2="380" class="segp"/>
+  <line x1="446" y1="380" x2="498" y2="380" class="segp"/>
+  <line x1="510" y1="380" x2="754" y2="380" class="seg"/>
+
+  <!-- connectors at all split points -->
+  <circle cx="120" cy="380" r="7" class="conn"/>
+  <circle cx="184" cy="380" r="7" class="conn"/>
+  <circle cx="440" cy="380" r="7" class="conn"/>
+  <circle cx="504" cy="380" r="7" class="conn"/>
+  <circle cx="760" cy="380" r="7" class="conn"/>
+
+  <!-- LR break guides -->
+  <line x1="184" y1="120" x2="184" y2="400" class="brk"/>
+  <line x1="504" y1="120" x2="504" y2="400" class="brk"/>
+
+  <!-- sub-segment id labels -->
+  <text x="152" y="408" class="mono" text-anchor="middle">@0.0–0.1</text>
+  <text x="312" y="408" class="mono" text-anchor="middle" fill="#b96a17">@0.1–0.5</text>
+  <text x="472" y="418" class="mono" text-anchor="middle" fill="#b96a17">@0.5–0.6</text>
+  <text x="632" y="408" class="mono" text-anchor="middle">@0.6–1.0</text>
+
+  <text x="440" y="450" class="lbl" text-anchor="middle" fill="#b96a17">the two amber sub-segments carry attribute X directly — no linear-reference arithmetic needed downstream</text>
+</svg>

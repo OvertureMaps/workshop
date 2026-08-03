@@ -1,3 +1,9 @@
+# ---- Internal resources ------------------------------------------------
+# Non-public working material (call notes, partner PDFs, internal PR/code
+# printouts, talking points). Never commit to the public repo. The leading
+# underscore also makes Jekyll skip this directory when building the site.
+_internal/
+
 # ---- Data --------------------------------------------------------------
 # Source data is downloaded separately by participants — see the lesson
 # markdowns and notebooks for download instructions.

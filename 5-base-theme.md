@@ -1,6 +1,6 @@
 # 5. The Base Theme
 
-| [<< 4. GERS](4-gers.md) | [Home](README.md) | >> |
+| [<< 4. GERS](4-gers.md) | [Home](README.md) | [6. LSIB matching demo >>](6-lsib-demo.md) |
 
 **Contents**
 - [5. The Base Theme](#5-the-base-theme)
@@ -79,3 +79,6 @@ You can also run these queries in a Github codespace. [See the Codespace instruc
 ```
 
     ![North America Low resolution DEM](img/na_dem_lo.jpg)
+
+---
+[Next: Matching international boundaries >>](6-lsib-demo.md)

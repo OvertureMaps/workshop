@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 470" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <style>
+    .t   { font-size: 12.5px; font-weight: 700; fill: #14324d; }
+    .s   { font-size: 10.5px; fill: #4a4a4a; }
+    .cap { font-size: 12px; fill: #555; }
+    .proc { fill: #eaf2fb; stroke: #2f6fb0; stroke-width: 1.5; }
+    .data { fill: #f4f4f2; stroke: #8a8a8a; stroke-width: 1.5; }
+    .hi   { fill: #fdf3e3; stroke: #d9832a; stroke-width: 1.8; }
+    .arw  { stroke: #333; stroke-width: 1.8; fill: none; }
+    .ttl  { font-size: 16px; font-weight: 700; fill: #1a1a1a; }
+  </style>
+
+  <text x="24" y="34" class="ttl">How a road-attribute dataset reaches analysis-ready Overture data</text>
+
+  <!-- arrow marker -->
+  <defs>
+    <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path d="M0 0 L7 3 L0 6 z" fill="#333"/>
+    </marker>
+  </defs>
+
+  <!-- main pipeline row, boxes h=76, center y=210 (172..248) -->
+  <!-- A: sources -->
+  <rect x="24"  y="172" width="132" height="76" rx="7" class="data"/>
+  <text x="90"  y="200" class="t" text-anchor="middle">Road sources</text>
+  <text x="90"  y="220" class="s" text-anchor="middle">OSM + other</text>
+  <text x="90"  y="234" class="s" text-anchor="middle">road networks</text>
+
+  <!-- B: partner conflation -->
+  <rect x="188" y="172" width="140" height="76" rx="7" class="proc"/>
+  <text x="258" y="203" class="t" text-anchor="middle">Road-data partner</text>
+  <text x="258" y="221" class="s" text-anchor="middle">geometry conflation</text>
+  <text x="258" y="235" class="s" text-anchor="middle">(refreshed on a cadence)</text>
+
+  <!-- C: overture central pipeline -->
+  <rect x="360" y="172" width="168" height="76" rx="7" class="proc"/>
+  <text x="444" y="199" class="t" text-anchor="middle">Overture pipeline</text>
+  <text x="444" y="217" class="s" text-anchor="middle">combobulation · consistent</text>
+  <text x="444" y="231" class="s" text-anchor="middle">sectioning · GERS ids</text>
+
+  <!-- D: overture transportation -->
+  <rect x="560" y="172" width="168" height="76" rx="7" class="data"/>
+  <text x="644" y="199" class="t" text-anchor="middle">Overture Transportation</text>
+  <text x="644" y="217" class="s" text-anchor="middle">segments + connectors</text>
+  <text x="644" y="231" class="s" text-anchor="middle">LR-scoped attributes</text>
+
+  <!-- J: join by id -->
+  <rect x="760" y="176" width="96" height="68" rx="7" class="proc"/>
+  <text x="808" y="206" class="t" text-anchor="middle">Join</text>
+  <text x="808" y="224" class="s" text-anchor="middle">by GERS id</text>
+
+  <!-- S: splitter -->
+  <rect x="888" y="176" width="120" height="68" rx="7" class="hi"/>
+  <text x="948" y="203" class="t" text-anchor="middle" fill="#b96a17">transportation-</text>
+  <text x="948" y="221" class="t" text-anchor="middle" fill="#b96a17">splitter</text>
+
+  <!-- E: analysis ready -->
+  <rect x="1040" y="172" width="120" height="76" rx="7" class="data"/>
+  <text x="1100" y="203" class="t" text-anchor="middle">Analysis-ready</text>
+  <text x="1100" y="221" class="s" text-anchor="middle">per-segment</text>
+  <text x="1100" y="235" class="s" text-anchor="middle">data</text>
+
+  <!-- horizontal arrows -->
+  <line x1="156" y1="210" x2="184" y2="210" class="arw" marker-end="url(#ah)"/>
+  <line x1="328" y1="210" x2="356" y2="210" class="arw" marker-end="url(#ah)"/>
+  <line x1="528" y1="210" x2="556" y2="210" class="arw" marker-end="url(#ah)"/>
+  <line x1="728" y1="210" x2="756" y2="210" class="arw" marker-end="url(#ah)"/>
+  <line x1="856" y1="210" x2="884" y2="210" class="arw" marker-end="url(#ah)"/>
+  <line x1="1008" y1="210" x2="1036" y2="210" class="arw" marker-end="url(#ah)"/>
+
+  <!-- sidecar dropping into the join -->
+  <rect x="708" y="72" width="200" height="66" rx="7" class="hi"/>
+  <text x="808" y="100" class="t" text-anchor="middle" fill="#b96a17">Your GERS-ified sidecar</text>
+  <text x="808" y="118" class="s" text-anchor="middle">your attributes, keyed to GERS ids</text>
+  <text x="808" y="132" class="s" text-anchor="middle">(the bridge file from lesson 9)</text>
+  <line x1="808" y1="138" x2="808" y2="174" class="arw" marker-end="url(#ah)"/>
+
+  <!-- outputs -->
+  <rect x="1000" y="320" width="160" height="52" rx="7" class="data"/>
+  <text x="1080" y="343" class="t" text-anchor="middle">Rendering · Routing</text>
+  <text x="1080" y="360" class="t" text-anchor="middle">· Analysis</text>
+  <path d="M1100 248 v40 h-20 v28" class="arw" marker-end="url(#ah)"/>
+
+  <!-- captions -->
+  <text x="24" y="300" class="cap">• Overture does not conflate arbitrary road geometry in-house — geometry comes from the road-data partner; the pipeline assigns GERS ids and matches attributes onto it.</text>
+  <text x="24" y="322" class="cap">• A dataset with no shared ids (like iRAP's) is spatially matched to obtain GERS ids, then attached as a sidecar — the near-term, attribute-association path.</text>
+  <text x="24" y="344" class="cap">• The transportation-splitter is the last mile: join your sidecar by id, split once, and every attribute becomes a plain per-segment value.</text>
+</svg>

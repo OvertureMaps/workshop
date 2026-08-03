@@ -8,6 +8,17 @@ A GERS ID is a 128-bit unique identifier that Overture keeps stable across data 
 
 Themes that do not conflate multiple input sources use deterministic hashes to ensure consistent matching from input datasets, such as OpenStreetMap, to an 128-bit ID that is fully compatible with the larger GERS ecosystem.
 
+## GERS is a system, not just a stable ID
+
+The "S" in GERS stands for **System**. A stable ID is only useful alongside the machinery that lets you find it, track how it changes, and connect your own data to it. GERS has five components:
+
+1. **The reference map.** Each Overture release is the latest global, open reference for these IDs. To carry a GERS ID, a feature must exist in Overture — we can't assign a stable ID to something we can't locate or describe.
+2. **The registry.** The official record of every GERS ID ever released. Look up any ID to see whether it's in the latest release and which release last contained it — enabling ID-based search, both geographically and within the files.
+3. **The data changelog.** An ID-based record, published with each release, of what was added, removed, or changed.
+4. **Bridge files.** Per-release mappings from GERS IDs back to source `record_id`s, so you can join Overture to the datasets it was built from.
+5. **Onboarding services.** Tools and third-party services that let anyone associate their own data with GERS.
+
+The sections below work through the changelog, bridge files, and onboarding services in practice; the registry and the reference map are the backdrop that makes them meaningful.
 
 ### Setup instructions
 
@@ -175,4 +186,5 @@ Associating third-party data with GERS usually involves a spatial join between d
 
 3. [Esri](https://www.esri.com/en-us/home)
 
-
+---
+[Next: Understanding the base theme >>](5-base-theme.md)

@@ -1,6 +1,6 @@
 # 6. LSIB <-> Overture matching demo
 
-| [<< 5. Base Theme](5-base-theme.md) | [Home](README.md) | [7. Matching polygon features to Overture >>](7-buildings-matching.md) |
+| [<< 6. Matching international boundaries](6-lsib-demo.md) | [Home](README.md) | [7. Matching polygon features to Overture >>](7-buildings-matching.md) |
 
 This page is a companion to companion to the LSIB <-> Overture matching demo in this notebook: `lsib-matching.ipynb`. The notebook is the runnable
 artifact; this file holds the conceptual background — why we made the
@@ -375,4 +375,4 @@ the headline:
 
 ---
 
-| [<< 5. Base Theme](5-base-theme.md) | [Home](README.md) | [7. Matching polygon features to Overture >>](7-buildings-matching.md) |
+| [<< 6. Matching international boundaries](6-lsib-demo.md) | [Home](README.md) | [7. Matching polygon features to Overture >>](7-buildings-matching.md) |

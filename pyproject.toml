@@ -19,3 +19,13 @@ dependencies = [
     "pystac>=1.14.3",
     "shapely>=2.0",
 ]
+
+[project.optional-dependencies]
+# Optional: enables the live transportation-splitter step in
+# notebooks/5-transportation-matching.ipynb. Only its pure-Python geometry
+# functions are used (no Spark session is started), but the package pulls in
+# pyspark/apache-sedona, so it is kept out of the default install. Enable with
+# `uv sync --extra splitter` (or `pip install ".[splitter]"`).
+splitter = [
+    "transportation-splitter @ git+https://github.com/OvertureMaps/transportation-splitter",
+]
