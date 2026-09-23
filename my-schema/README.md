@@ -21,8 +21,8 @@ overture-codegen generate --format markdown --tag my_schema --output-dir docs/
 1. Write a class in `src/my_schema/models.py` that subclasses `Feature`.
 2. Re-export it from `src/my_schema/__init__.py`.
 3. Register it in `pyproject.toml` under `[project.entry-points."overture.models"]`.
-4. Run `uv sync` from the repository root (not from `my-schema/`, which removes
-   the workshop's other packages), then `overture-schema list-types --tag my_schema` to
-   check it appears.
+4. Run `uv sync --all-packages`, then `overture-schema list-types --tag my_schema` to
+   check it appears. (`--all-packages` keeps the workshop's other packages; a bare
+   `uv sync` in this directory removes them.)
 
-Edits to an existing model take effect immediately; only a new entry point needs `uv sync`.
+Edits to an existing model take effect immediately; only a new entry point needs `uv sync --all-packages`.
