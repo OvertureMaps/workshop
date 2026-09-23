@@ -1,14 +1,24 @@
 {
-	"image": "mcr.microsoft.com/devcontainers/universal:2",
+	"image": "mcr.microsoft.com/devcontainers/python:3-3.12-trixie",
 	"features": {
+		"ghcr.io/va-h/devcontainers-features/uv:1": {},
 		"ghcr.io/eitsupi/devcontainer-features/duckdb-cli:1": {
 			"version": "latest",
 			"extensions": "spatial",
 			"communityExtensions": "h3"
 		}
 	},
+	"containerEnv": {
+		"UV_LINK_MODE": "copy"
+	},
+	"remoteEnv": {
+		"PATH": "${containerWorkspaceFolder}/.venv/bin:${containerEnv:PATH}"
+	},
 	"customizations": {
 		"vscode": {
+			"settings": {
+				"python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python"
+			},
 			"extensions": [
 				"ms-toolsai.jupyter",
 				"ms-toolsai.vscode-jupyter-cell-tags",
@@ -21,5 +31,5 @@
 			]
 		}
 	},
-	"postCreateCommand": "pip install --user -r requirements.txt"	  
+	"postCreateCommand": "uv sync --frozen"
 }
