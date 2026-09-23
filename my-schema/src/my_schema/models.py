@@ -52,4 +52,6 @@ class RoadSafetyRating(Feature):
     speed_limit_kph: Annotated[
         uint16 | None, Field(description="Posted speed limit, in kilometres per hour.")
     ] = None
-    survey: Survey | None = None
+    survey: Annotated[
+        Survey | None, Field(description="The survey this rating came from.")
+    ] = None
