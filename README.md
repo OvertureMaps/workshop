@@ -62,7 +62,9 @@ jupyter lab
 
 The `requirements.txt` is generated from `pyproject.toml` and `uv.lock`, so versions match the uv setup.
 
-> **Note:** GitHub Codespaces support is being updated for the new setup. For now, please use one of the local setup paths above.
+### Alternative: GitHub Codespaces
+
+If you'd rather not install anything locally: **Code → Codespaces → Create codespace on `main`**. The devcontainer runs `uv sync --frozen` automatically, so the same locked environment as the local setup is ready once the codespace finishes building — no separate install path to debug. Open a notebook and select the `.venv` interpreter when the kernel picker prompts you.
 
 ---
 
