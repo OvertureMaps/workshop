@@ -63,8 +63,8 @@ utah_place = "utah_schema.utah_places:UtahPlace"
 utah_schema = "utah_schema.tags:utah_schema_provider"
 ```
 
-Add those to the package's `pyproject.toml` and run `uv sync`; `--tag utah_schema` then selects
-the model. An existing `tags.py` is never overwritten.
+Add those to the package's `pyproject.toml` and run `uv sync --all-packages` from the repository
+root; `--tag utah_schema` then selects the model. An existing `tags.py` is never overwritten.
 
 ## Modules
 
@@ -80,7 +80,7 @@ the model. An existing `tags.py` is never overwritten.
 ## Development
 
 ```console
-uv sync --dev && uv run pytest && uv run mypy .
+uv run pytest && uv run mypy .
 ```
 
 The fixture is 88 Utah places from U.S. Census Bureau TIGER/Line 2023

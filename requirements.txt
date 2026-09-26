@@ -2,6 +2,8 @@
 #    uv export --no-hashes --format requirements-txt
 -e ./my-schema
     # via workshop
+-e ./schema-bootstrap
+    # via workshop
 annotated-types==0.8.0
     # via pydantic
 anyio==4.13.0
@@ -91,8 +93,10 @@ defusedxml==0.7.1
     # via nbconvert
 dnspython==2.8.0
     # via email-validator
-duckdb==1.5.2
-    # via workshop
+duckdb==1.5.5
+    # via
+    #   schema-bootstrap
+    #   workshop
 email-validator==2.3.0
     # via pydantic
 executing==2.2.1

@@ -18,13 +18,16 @@ dependencies = [
     "pandas>=2.0",
     "pyarrow>=14.0",
     "pystac>=1.14.3",
+    "schema-bootstrap",
     "shapely>=2.0",
 ]
 
 [tool.uv.workspace]
 members = [
     "my-schema",
+    "schema-bootstrap",
 ]
 
 [tool.uv.sources]
 my-schema = { workspace = true, editable = true }
+schema-bootstrap = { workspace = true, editable = true }
