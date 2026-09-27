@@ -6,6 +6,14 @@
 			"version": "latest",
 			"extensions": "spatial",
 			"communityExtensions": "h3"
+		},
+		"ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {
+			"jqVersion": "latest"
+		},
+		"ghcr.io/devcontainers-extra/features/gh-release:1": {
+			"repo": "planetlabs/gpq",
+			"binaryNames": "gpq",
+			"version": "0.24.0"
 		}
 	},
 	"containerEnv": {
