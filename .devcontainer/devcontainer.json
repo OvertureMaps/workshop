@@ -25,7 +25,8 @@
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python"
+				"python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+				"python.languageServer": "None"
 			},
 			"extensions": [
 				"ms-toolsai.jupyter",
