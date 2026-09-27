@@ -31,3 +31,6 @@ members = [
 [tool.uv.sources]
 my-schema = { workspace = true, editable = true }
 schema-bootstrap = { workspace = true, editable = true }
+# stac-table-columns output is unreleased (OvertureMaps/schema#724); install codegen from
+# that branch until it ships.
+overture-schema-codegen = { git = "https://github.com/OvertureMaps/schema.git", branch = "stac-table-columns", subdirectory = "packages/overture-schema-codegen" }

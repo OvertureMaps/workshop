@@ -1711,7 +1711,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "overture-schema", specifier = ">=2.0.0" },
-    { name = "overture-schema-codegen", specifier = ">=2.0.0" },
+    { name = "overture-schema-codegen", git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-codegen&branch=stac-table-columns" },
 ]
 
 [[package]]
@@ -2005,7 +2005,7 @@ wheels = [
 [[package]]
 name = "overture-schema-cli"
 version = "2.0.0"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-cli&branch=stac-table-columns#1422ae58fbc67009e6c220afdf1eeb393f41512d" }
 dependencies = [
     { name = "click" },
     { name = "overture-schema-common" },
@@ -2015,15 +2015,11 @@ dependencies = [
     { name = "rich" },
     { name = "yamlcore" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/94/92/f4b8fd9349a3c06a590ae7d2b77dee4a43def0619d2ecaa654fd104730d1/overture_schema_cli-2.0.0.tar.gz", hash = "sha256:71aebd2577cab96ad8e9d28eb16ef957143e24f2c78105ca89967b6c896f8cf9", size = 25834, upload-time = "2026-09-02T22:22:57.398Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/e9/d5/555d442ee5ce28b9babc6a87426292c268eaa961c76a0ce837de13379ab9/overture_schema_cli-2.0.0-py3-none-any.whl", hash = "sha256:7865625b920cdb619779d7f567ac16b8c87dc0005c0f799b7649d43d480a1c0f", size = 30902, upload-time = "2026-09-02T22:22:56.135Z" },
-]
 
 [[package]]
 name = "overture-schema-codegen"
 version = "2.0.0"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-codegen&branch=stac-table-columns#1422ae58fbc67009e6c220afdf1eeb393f41512d" }
 dependencies = [
     { name = "click" },
     { name = "jinja2" },
@@ -2032,37 +2028,25 @@ dependencies = [
     { name = "overture-schema-system" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0c/ee/b45e212e4fa5ea3b49662f3f1944dfca6776545b619226453b35835e9f12/overture_schema_codegen-2.0.0.tar.gz", hash = "sha256:e7a854b8097f06e949bfd340e2d967f459170a047375d76319cba81756d02701", size = 116561, upload-time = "2026-09-02T22:23:00.812Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/27/a1/49961c518e7bef56ead3bc545b72dd8b09103d5a897f5373f3bb6adc95ea/overture_schema_codegen-2.0.0-py3-none-any.whl", hash = "sha256:92ac4caa17ae8203b1826d1487ec245516254a571bd69ee7af62ddf743c646ac", size = 146569, upload-time = "2026-09-02T22:22:59.32Z" },
-]
 
 [[package]]
 name = "overture-schema-common"
 version = "2.0.0"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-common&branch=stac-table-columns#1422ae58fbc67009e6c220afdf1eeb393f41512d" }
 dependencies = [
     { name = "overture-schema-system" },
     { name = "pydantic" },
     { name = "shapely" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5e/95/967793bc9a852620bb853f095bca07f1a666e1d57bc76702a074e61f64cb/overture_schema_common-2.0.0.tar.gz", hash = "sha256:8ea5852195ab0e324cb6c18d375cccddfc46dd6ba09d899cae4e2e80702c1270", size = 19970, upload-time = "2026-09-02T22:23:59.056Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/16/ec/b252d4b9a17346a8854a0f9193ae135dffc618d8a98e2370ec5cb71ca82e/overture_schema_common-2.0.0-py3-none-any.whl", hash = "sha256:5bfbfe843807d595bf9b0ec317d61ca4ee121906af15faeb7c187a0b1b1b2b27", size = 28605, upload-time = "2026-09-02T22:23:57.916Z" },
-]
 
 [[package]]
 name = "overture-schema-system"
 version = "2.0.0"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-system&branch=stac-table-columns#1422ae58fbc67009e6c220afdf1eeb393f41512d" }
 dependencies = [
     { name = "pydantic" },
     { name = "shapely" },
     { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/e6/83/12ca37c60c526fbbb7134678197b9708d7bc04c48df225444c19d9a228a7/overture_schema_system-2.0.0.tar.gz", hash = "sha256:e305ceb07cd3ffc0fbf63d69e7e1905300f78892454d3c938a01fff54dffe2dc", size = 63419, upload-time = "2026-09-02T22:22:58.848Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/26/48/811564be686fc756bf9af228c97d79efc50302c5cac4e9c88240bff74e8b/overture_schema_system-2.0.0-py3-none-any.whl", hash = "sha256:7428d428675988c11b768103f52f711e8b21a33307964ca38d83cbbb11758448", size = 86016, upload-time = "2026-09-02T22:22:56.799Z" },
 ]
 
 [[package]]
