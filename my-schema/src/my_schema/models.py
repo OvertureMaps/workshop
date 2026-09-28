@@ -38,6 +38,7 @@ class Survey(BaseModel):
 
 # A rule across fields, written as data so the docs can state it.
 # Avoid @field_validator and @model_validator: they run, but no tool can read them.
+@no_extra_fields
 @require_if(["speed_limit_kph"], FieldEqCondition("road_type", "motorway"))
 class RoadSafetyRating(Feature):
     """A road-safety star rating for a stretch of road."""
