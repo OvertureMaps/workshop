@@ -268,13 +268,13 @@ orjson==3.11.9
     # via overturemaps
 overture-schema==2.0.0
     # via my-schema
-overture-schema-cli @ git+https://github.com/OvertureMaps/schema.git@1422ae58fbc67009e6c220afdf1eeb393f41512d#subdirectory=packages/overture-schema-cli
+overture-schema-cli @ git+https://github.com/sethfitz/schema.git@29f5536c7294e5d250ab0ef6283f9104413e047e#subdirectory=packages/overture-schema-cli
     # via
     #   overture-schema
     #   overture-schema-codegen
-overture-schema-codegen @ git+https://github.com/OvertureMaps/schema.git@1422ae58fbc67009e6c220afdf1eeb393f41512d#subdirectory=packages/overture-schema-codegen
+overture-schema-codegen @ git+https://github.com/sethfitz/schema.git@29f5536c7294e5d250ab0ef6283f9104413e047e#subdirectory=packages/overture-schema-codegen
     # via my-schema
-overture-schema-common @ git+https://github.com/OvertureMaps/schema.git@1422ae58fbc67009e6c220afdf1eeb393f41512d#subdirectory=packages/overture-schema-common
+overture-schema-common @ git+https://github.com/sethfitz/schema.git@29f5536c7294e5d250ab0ef6283f9104413e047e#subdirectory=packages/overture-schema-common
     # via
     #   overture-schema-cli
     #   overture-schema-codegen
@@ -285,7 +285,7 @@ overture-schema-common @ git+https://github.com/OvertureMaps/schema.git@1422ae58
     #   overture-schema-theme-places
     #   overture-schema-theme-transportation
     #   overture-schema-validation
-overture-schema-system @ git+https://github.com/OvertureMaps/schema.git@1422ae58fbc67009e6c220afdf1eeb393f41512d#subdirectory=packages/overture-schema-system
+overture-schema-system @ git+https://github.com/sethfitz/schema.git@29f5536c7294e5d250ab0ef6283f9104413e047e#subdirectory=packages/overture-schema-system
     # via
     #   overture-schema-cli
     #   overture-schema-codegen
