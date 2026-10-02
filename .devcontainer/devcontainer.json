@@ -25,7 +25,8 @@
 	"customizations": {
 		"vscode": {
 			"settings": {
-				"python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python"
+				"python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+				"python.languageServer": "None"
 			},
 			"extensions": [
 				"ms-toolsai.jupyter",
@@ -35,7 +36,8 @@
 				"ms-toolsai.vscode-jupyter-slideshow",
 				"ms-python.vscode-pylance",
 				"ms-python.python",
-				"ms-python.debugpy"
+				"ms-python.debugpy",
+				"astral-sh.ty"
 			]
 		}
 	},

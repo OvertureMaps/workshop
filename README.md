@@ -25,6 +25,15 @@ permalink: /index.html
 
 ---
 
+## Workshop Material
+
+| Name | Description |
+| ---- | ----------- |
+| [my-schema](my-schema/README.md) | A starting point for modelling your own data with Overture's schema framework |
+| [schema-bootstrap](schema-bootstrap/README.md) | Generate a first draft of that model from a data file and the metadata shipped beside it |
+
+---
+
 ## Workshop Setup
 
 ### Local setup (recommended)

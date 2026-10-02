@@ -1,0 +1,10 @@
+{
+  "type": "Feature",
+  "id": "rsr-0002",
+  "geometry": {"type": "Point", "coordinates": [-122.68, 45.52]},
+  "properties": {
+    "stars": 7,
+    "road_type": "motorway",
+    "survey": {"assessor": "irap", "rated_by": "me"}
+  }
+}

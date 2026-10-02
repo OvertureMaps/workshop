@@ -11,11 +11,27 @@ dependencies = [
     "jupyter>=1.0",
     "lonboard>=0.16.0",
     "matplotlib>=3.7",
+    "my-schema",
     "notebook>=7.0",
     "numpy>=1.24",
     "overturemaps>=1.0.0",
     "pandas>=2.0",
     "pyarrow>=14.0",
     "pystac>=1.14.3",
+    "schema-bootstrap",
     "shapely>=2.0",
 ]
+
+[tool.uv.workspace]
+members = [
+    "my-schema",
+    "schema-bootstrap",
+]
+
+[tool.uv.sources]
+my-schema = { workspace = true, editable = true }
+schema-bootstrap = { workspace = true, editable = true }
+# Codegen's STAC table:columns output (OvertureMaps/schema#724) and @no_extra_fields
+# returning the decorated class's type (OvertureMaps/schema#761) are both unreleased;
+# workshop-stac-ty is stac-table-columns with #761 merged in. Drop the pin when both ship.
+overture-schema-codegen = { git = "https://github.com/sethfitz/schema.git", branch = "workshop-stac-ty", subdirectory = "packages/overture-schema-codegen" }
