@@ -31,7 +31,6 @@ members = [
 [tool.uv.sources]
 my-schema = { workspace = true, editable = true }
 schema-bootstrap = { workspace = true, editable = true }
-# Model-constraint decorators such as @no_extra_fields return the decorated class's type
-# as of OvertureMaps/schema#761, which is on main but unreleased. Drop the pin when a
-# release includes it.
-overture-schema-codegen = { git = "https://github.com/OvertureMaps/schema.git", branch = "main", subdirectory = "packages/overture-schema-codegen" }
+# Codegen's STAC table:columns output (OvertureMaps/schema#724) is unreleased; install
+# codegen from that branch until it ships.
+overture-schema-codegen = { git = "https://github.com/OvertureMaps/schema.git", branch = "stac-table-columns", subdirectory = "packages/overture-schema-codegen" }

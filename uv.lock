@@ -1711,7 +1711,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "overture-schema", specifier = ">=2.0.0" },
-    { name = "overture-schema-codegen", git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-codegen&branch=main" },
+    { name = "overture-schema-codegen", git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-codegen&branch=stac-table-columns" },
 ]
 
 [[package]]
@@ -2005,7 +2005,7 @@ wheels = [
 [[package]]
 name = "overture-schema-cli"
 version = "2.0.0"
-source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-cli&branch=main#e6b120a36a3c23f3de0a6122821ee5749eed9f91" }
+source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-cli&branch=stac-table-columns#1422ae58fbc67009e6c220afdf1eeb393f41512d" }
 dependencies = [
     { name = "click" },
     { name = "overture-schema-common" },
@@ -2019,7 +2019,7 @@ dependencies = [
 [[package]]
 name = "overture-schema-codegen"
 version = "2.0.0"
-source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-codegen&branch=main#e6b120a36a3c23f3de0a6122821ee5749eed9f91" }
+source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-codegen&branch=stac-table-columns#1422ae58fbc67009e6c220afdf1eeb393f41512d" }
 dependencies = [
     { name = "click" },
     { name = "jinja2" },
@@ -2032,7 +2032,7 @@ dependencies = [
 [[package]]
 name = "overture-schema-common"
 version = "2.0.0"
-source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-common&branch=main#e6b120a36a3c23f3de0a6122821ee5749eed9f91" }
+source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-common&branch=stac-table-columns#1422ae58fbc67009e6c220afdf1eeb393f41512d" }
 dependencies = [
     { name = "overture-schema-system" },
     { name = "pydantic" },
@@ -2042,7 +2042,7 @@ dependencies = [
 [[package]]
 name = "overture-schema-system"
 version = "2.0.0"
-source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-system&branch=main#e6b120a36a3c23f3de0a6122821ee5749eed9f91" }
+source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-system&branch=stac-table-columns#1422ae58fbc67009e6c220afdf1eeb393f41512d" }
 dependencies = [
     { name = "pydantic" },
     { name = "shapely" },
