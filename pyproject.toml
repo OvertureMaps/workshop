@@ -31,7 +31,7 @@ members = [
 [tool.uv.sources]
 my-schema = { workspace = true, editable = true }
 schema-bootstrap = { workspace = true, editable = true }
-# Codegen's STAC table:columns output (OvertureMaps/schema#724) and @no_extra_fields
-# returning the decorated class's type (OvertureMaps/schema#761) are both unreleased;
-# workshop-stac-ty is stac-table-columns with #761 merged in. Drop the pin when both ship.
-overture-schema-codegen = { git = "https://github.com/sethfitz/schema.git", branch = "workshop-stac-ty", subdirectory = "packages/overture-schema-codegen" }
+# Model-constraint decorators such as @no_extra_fields return the decorated class's type
+# as of OvertureMaps/schema#761, which is on main but unreleased. Drop the pin when a
+# release includes it.
+overture-schema-codegen = { git = "https://github.com/OvertureMaps/schema.git", branch = "main", subdirectory = "packages/overture-schema-codegen" }

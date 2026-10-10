@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.15' and sys_platform == 'win32'",
@@ -1711,7 +1711,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "overture-schema", specifier = ">=2.0.0" },
-    { name = "overture-schema-codegen", git = "https://github.com/sethfitz/schema.git?subdirectory=packages%2Foverture-schema-codegen&branch=workshop-stac-ty" },
+    { name = "overture-schema-codegen", git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-codegen&branch=main" },
 ]
 
 [[package]]
@@ -2005,7 +2005,7 @@ wheels = [
 [[package]]
 name = "overture-schema-cli"
 version = "2.0.0"
-source = { git = "https://github.com/sethfitz/schema.git?subdirectory=packages%2Foverture-schema-cli&branch=workshop-stac-ty#29f5536c7294e5d250ab0ef6283f9104413e047e" }
+source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-cli&branch=main#e6b120a36a3c23f3de0a6122821ee5749eed9f91" }
 dependencies = [
     { name = "click" },
     { name = "overture-schema-common" },
@@ -2019,7 +2019,7 @@ dependencies = [
 [[package]]
 name = "overture-schema-codegen"
 version = "2.0.0"
-source = { git = "https://github.com/sethfitz/schema.git?subdirectory=packages%2Foverture-schema-codegen&branch=workshop-stac-ty#29f5536c7294e5d250ab0ef6283f9104413e047e" }
+source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-codegen&branch=main#e6b120a36a3c23f3de0a6122821ee5749eed9f91" }
 dependencies = [
     { name = "click" },
     { name = "jinja2" },
@@ -2032,7 +2032,7 @@ dependencies = [
 [[package]]
 name = "overture-schema-common"
 version = "2.0.0"
-source = { git = "https://github.com/sethfitz/schema.git?subdirectory=packages%2Foverture-schema-common&branch=workshop-stac-ty#29f5536c7294e5d250ab0ef6283f9104413e047e" }
+source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-common&branch=main#e6b120a36a3c23f3de0a6122821ee5749eed9f91" }
 dependencies = [
     { name = "overture-schema-system" },
     { name = "pydantic" },
@@ -2042,7 +2042,7 @@ dependencies = [
 [[package]]
 name = "overture-schema-system"
 version = "2.0.0"
-source = { git = "https://github.com/sethfitz/schema.git?subdirectory=packages%2Foverture-schema-system&branch=workshop-stac-ty#29f5536c7294e5d250ab0ef6283f9104413e047e" }
+source = { git = "https://github.com/OvertureMaps/schema.git?subdirectory=packages%2Foverture-schema-system&branch=main#e6b120a36a3c23f3de0a6122821ee5749eed9f91" }
 dependencies = [
     { name = "pydantic" },
     { name = "shapely" },
