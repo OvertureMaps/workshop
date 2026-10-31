@@ -1,0 +1,10 @@
+{
+  "type": "Feature",
+  "id": "rsr-0001",
+  "geometry": {"type": "LineString", "coordinates": [[-122.68, 45.52], [-122.67, 45.53]]},
+  "properties": {
+    "stars": 4,
+    "road_type": "arterial",
+    "survey": {"assessor": "iRAP", "surveyed_on": "2026-05-01"}
+  }
+}
