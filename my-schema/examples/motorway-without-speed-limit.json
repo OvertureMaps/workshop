@@ -1,0 +1,9 @@
+{
+  "type": "Feature",
+  "id": "rsr-0003",
+  "geometry": {"type": "LineString", "coordinates": [[-122.68, 45.52], [-122.67, 45.53]]},
+  "properties": {
+    "stars": 2,
+    "road_type": "motorway"
+  }
+}

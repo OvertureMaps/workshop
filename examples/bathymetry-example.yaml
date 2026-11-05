@@ -1,0 +1,10 @@
+id: 5d40bd6c-db14-4492-a29f-5b6f3e7a1e44
+type: Feature
+geometry:
+  type: Polygon
+  coordinates: [[[-111.95, 41.05], [-111.90, 41.05], [-111.90, 41.10], [-111.95, 41.10], [-111.95, 41.05]]]
+properties:
+  theme: base
+  type: bathymetry
+  version: 0
+  depth: 10

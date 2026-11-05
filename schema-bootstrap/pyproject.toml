@@ -1,0 +1,76 @@
+[project]
+name = "schema-bootstrap"
+version = "0.1.0"
+description = "Bootstrap Overture-convention Pydantic models from a data file, seeding descriptions and enum domains from sidecar metadata"
+readme = "README.md"
+authors = [
+    { name = "Seth Fitzsimmons", email = "seth@mojodna.net" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "duckdb>=1.5.5",
+]
+
+[project.scripts]
+schema-bootstrap = "schema_bootstrap.cli:main"
+
+
+[build-system]
+requires = ["uv_build>=0.11.32,<0.13"]
+build-backend = "uv_build"
+
+
+[dependency-groups]
+dev = [
+    "mypy>=2.3.1",
+    # Package-specific dev dependencies (if any)
+    # Tests import the generated model to validate the fixture's own rows against it.
+    "overture-schema>=2.0.0",
+    "pytest>=9.1.1",
+    "ruff>=0.16.6",
+]
+
+
+
+# Per-package mypy configuration
+[tool.mypy]
+mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
+files = ["src", "tests"]
+# Generated output is an artifact for reading, not code this project builds.
+exclude = ["^examples/"]
+python_version = "3.12"
+strict = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+warn_return_any = false
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "-q",
+    "-ra",  # show summary of all test outcomes
+]
+markers = [
+    "slow: marks tests as slow",
+    "integration: marks tests as integration tests",
+]
+
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+# Generated output is formatted by ruff, not written to ruff's rules by hand.
+"examples/*.py" = ["ALL"]
