@@ -1,0 +1,38 @@
+[project]
+name = "my-schema"
+version = "0.1.0"
+description = "A starting point for modelling your own data with Overture's schema framework"
+requires-python = ">=3.12"
+dependencies = [
+    "overture-schema>=2.0.0",
+    "overture-schema-codegen>=2.0.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.11.32,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "my_schema"
+
+# The tools find your models through this entry point: one line per model,
+# `name = "module:Class"`. After adding a line, run `uv sync` so it registers.
+[project.entry-points."overture.models"]
+road_safety_rating = "my_schema:RoadSafetyRating"
+
+# Tags the models above with `my_schema`, so `--tag my_schema` selects them.
+[project.entry-points."overture.tag_providers"]
+my_schema = "my_schema.tags:my_schema_provider"
+
+# Example rows appear on each model's generated Markdown page.
+[[examples.RoadSafetyRating]]
+id = "rsr-0001"
+geometry = "LINESTRING (-122.68 45.52, -122.67 45.53)"
+stars = 4
+road_type = "arterial"
+
+[examples.RoadSafetyRating.bbox]
+xmin = -122.68
+xmax = -122.67
+ymin = 45.52
+ymax = 45.53
